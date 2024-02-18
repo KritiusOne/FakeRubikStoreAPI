@@ -29,17 +29,14 @@ namespace Infraestructure.Repositories
             return await _entities.FindAsync(id);
         }
 
-        public async void Update(int id, T element)
+        public void Update(int id, T element)
         {
-            var toUpdate = await _entities.FindAsync(id);
-            //AQUI FALTA CODIGO del autoMapper
-
+            _entities.Update(element);
         }
         public async Task Delete(int id)
         {
             var forDelete = await _entities.FindAsync(id);
             _entities.Remove(forDelete);
-            await _context.SaveChangesAsync();
         }
     }
 }

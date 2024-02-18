@@ -4,16 +4,17 @@ using Infraestructure.Data;
 
 namespace Infraestructure.Repositories
 {
-    public class UnitOfWork : IUnitOfWork
+    public class UnitOfWork<T> : IUnitOfWork<T> where T : BaseEntity
     {
         private readonly FakeRubikStoreContext _context;
-        public UnitOfWork(FakeRubikStoreContext contx) 
+        public UnitOfWork(FakeRubikStoreContext contx)
         {
             _context = contx;
         }
 
         public IRepository<User> UserRepository => new UserRepository(_context);
-        public IRepository<Role> RoleRepo => new BaseRepository<Role>(_context);
+        public IRepository<T> BaseRepo => new BaseRepository<T>(_context);
+        public IRepository<State> StateRepo => new BaseRepository<State>(_context);
 
         public void Dispose()
         {
