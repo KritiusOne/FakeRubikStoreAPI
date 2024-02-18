@@ -2,9 +2,9 @@
 
 public partial class ProductsProviders : BaseEntity
 {
-    public int IdProveedores { get; set; }
+    public int IdProvider { get; set; }
 
-    public int IdProductos { get; set; }
+    public int IdProduct { get; set; }
 
     public virtual Product IdProductosNavigation { get; set; } = null!;
 

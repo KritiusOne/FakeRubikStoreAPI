@@ -7,9 +7,9 @@ public partial class Review
 {
     public int Id { get; set; }
 
-    public string? Descripcion { get; set; }
+    public string? Description { get; set; }
 
     public int Rate { get; set; }
 
-    public virtual ICollection<Product> Productos { get; } = new List<Product>();
+    public virtual ICollection<Product> Products { get; } = new List<Product>();
 }

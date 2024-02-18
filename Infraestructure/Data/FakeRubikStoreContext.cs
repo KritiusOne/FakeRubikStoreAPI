@@ -51,7 +51,8 @@ public partial class FakeRubikStoreContext : DbContext
         modelBuilder.Entity<ProductCategory>(entity =>
         {
             entity.ToTable("Categorias_Productos");
-
+            entity.Property(e => e.IdProduct).HasColumnName("IdProducto");
+            entity.Property(e => e.IdCategory).HasColumnName("IdCategoria");
             entity.HasOne(d => d.IdCategoriaNavigation).WithMany(p => p.ProductCategories)
                 .HasForeignKey(d => d.IdCategory)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -91,10 +92,13 @@ public partial class FakeRubikStoreContext : DbContext
 
         modelBuilder.Entity<Delivery>(entity =>
         {
+            entity.ToTable("Envios");
             entity.Property(e => e.Code)
                 .HasMaxLength(100)
-                .IsUnicode(false);
-
+                .IsUnicode(false)
+                .HasColumnName("Codigo");
+            entity.Property(e => e.IdState).HasColumnName("IdEstado");
+            entity.Property(e => e.IdUser).HasColumnName("IdUsuario");
             entity.HasOne(d => d.IdStateNav).WithMany(p => p.Deliveries)
                 .HasForeignKey(d => d.IdState)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -144,11 +148,11 @@ public partial class FakeRubikStoreContext : DbContext
                 .HasColumnName("Miniatura")
                 .HasMaxLength(50)
                 .IsUnicode(false);
-            entity.Property(e => e.Name).HasColumnName("Nombre")
+            entity.Property(e => e.Name).HasColumnName("NombreProducto ")
                 .HasMaxLength(50)
                 .IsUnicode(false);
 
-            entity.HasOne(d => d.ReviewNav).WithMany(p => p.Productos)
+            entity.HasOne(d => d.ReviewNav).WithMany(p => p.Products)
                 .HasForeignKey(d => d.IdReview)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Productos_Reviews");
@@ -157,7 +161,10 @@ public partial class FakeRubikStoreContext : DbContext
         modelBuilder.Entity<OrdersProducts>(entity =>
         {
             entity.ToTable("Productos_Ordenes");
-
+            entity.Property(e => e.IdProduct).HasColumnName("IdProducto");
+            entity.Property(e => e.IdOrder).HasColumnName("IdOrden");
+            entity.Property(e => e.ProductsNumber).HasColumnName("Cantidad");
+            entity.Property(e => e.Price).HasColumnName("Precio");
             entity.HasOne(d => d.OrderNav).WithMany(p => p.OrderProducts)
                 .HasForeignKey(d => d.IdOrder)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -171,14 +178,15 @@ public partial class FakeRubikStoreContext : DbContext
         modelBuilder.Entity<ProductsProviders>(entity =>
         {
             entity.ToTable("Productos_Proveedores");
-
+            entity.Property(e => e.IdProduct).HasColumnName("IdProducto");
+            entity.Property(e => e.IdProvider).HasColumnName("IdProveedor");
             entity.HasOne(d => d.IdProductosNavigation).WithMany(p => p.ProvidersProducts)
-                .HasForeignKey(d => d.IdProductos)
+                .HasForeignKey(d => d.IdProduct)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Productos_Proveedores_Productos");
 
             entity.HasOne(d => d.IdProveedoresNavigation).WithMany(p => p.ProvidersProducts)
-                .HasForeignKey(d => d.IdProveedores)
+                .HasForeignKey(d => d.IdProvider)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Productos_Proveedores_Proveedores");
         });
@@ -201,9 +209,10 @@ public partial class FakeRubikStoreContext : DbContext
 
         modelBuilder.Entity<Review>(entity =>
         {
-            entity.Property(e => e.Descripcion)
+            entity.Property(e => e.Description)
                 .HasMaxLength(100)
-                .IsUnicode(false);
+                .IsUnicode(false)
+                .HasColumnName("Descripcion");
             entity.Property(e => e.Rate).HasColumnName("rate");
         });
 
@@ -211,7 +220,7 @@ public partial class FakeRubikStoreContext : DbContext
         {
             entity.HasKey(e => e.Id);
 
-            entity.ToTable("Role");
+            entity.ToTable("Rol");
             entity.Property(e => e.Id).HasColumnName("IdRol");
             entity.Property(e => e.Name)
                 .HasMaxLength(20)
@@ -221,6 +230,7 @@ public partial class FakeRubikStoreContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
+            entity.ToTable("Usuarios");
             entity.Property(e => e.SecondName)
                 .HasMaxLength(50)
                 .IsUnicode(false)
@@ -236,7 +246,8 @@ public partial class FakeRubikStoreContext : DbContext
                 .HasMaxLength(30)
                 .IsUnicode(false)
                 .HasColumnName("Telefono");
-
+            entity.Property(e => e.IdRole).HasColumnName("IdRol");
+            entity.Property(e => e.IdAddress).HasColumnName("IdDireccion");
             entity.HasOne(d => d.UserDirectionNav).WithMany(p => p.Users)
                 .HasForeignKey(d => d.IdAddress)
                 .OnDelete(DeleteBehavior.ClientSetNull)
