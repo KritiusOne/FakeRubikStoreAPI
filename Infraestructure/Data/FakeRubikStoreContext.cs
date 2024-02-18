@@ -112,7 +112,7 @@ public partial class FakeRubikStoreContext : DbContext
 
         modelBuilder.Entity<State>(entity =>
         {
-            entity.ToTable("State");
+            entity.ToTable("Estado");
 
             entity.Property(e => e.Name)
                 .HasMaxLength(50)
