@@ -13,6 +13,7 @@ namespace Infraestructure.Repositories
         }
 
         public IRepository<User> UserRepository => new UserRepository(_context);
+        public IRepository<Role> RoleRepo => new BaseRepository<Role>(_context);
 
         public void Dispose()
         {

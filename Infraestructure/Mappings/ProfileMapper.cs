@@ -10,6 +10,9 @@ namespace Infraestructure.Mappings
         {
             CreateMap<User, UserDTO>();
             CreateMap<UserDTO, User>();
+
+            CreateMap<Role, RoleDTO>().ReverseMap();
+
         }
     }
 }
