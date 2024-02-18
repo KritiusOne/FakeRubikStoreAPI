@@ -2,12 +2,11 @@
 
 namespace Aplication.Interfaces
 {
-    public interface IUnitOfWork : IDisposable
+    public interface IUnitOfWork<T> : IDisposable where T : BaseEntity
     {
         IRepository<User> UserRepository { get; }
-        IRepository<Role> RoleRepo { get; }
+        IRepository<T> BaseRepo { get;  }
         void SaveChanges();
-
         Task SaveChangesAsync();
     }
 }

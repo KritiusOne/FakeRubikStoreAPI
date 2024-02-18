@@ -1,13 +1,12 @@
-﻿using Aplication.DTOs;
-using Aplication.Entities;
+﻿using Aplication.Entities;
 using Aplication.Interfaces;
 
 namespace Aplication.Services
 {
-    public class UserService : IUserService
+    public class UserService<T> : IUserService<T> where T : User
     {
-        private readonly IUnitOfWork _unitOfWork;
-        public UserService(IUnitOfWork unitOfWork)
+        private readonly IUnitOfWork<T> _unitOfWork;
+        public UserService(IUnitOfWork<T> unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
@@ -22,5 +21,6 @@ namespace Aplication.Services
         {
             return  _unitOfWork.UserRepository.GetAll();
         }
+
     }
 }

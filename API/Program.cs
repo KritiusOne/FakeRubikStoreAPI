@@ -1,3 +1,4 @@
+using Aplication.Entities;
 using Aplication.Interfaces;
 using Aplication.Services;
 using Infraestructure.Data;
@@ -17,9 +18,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(ProfileMapper));
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
-builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
-builder.Services.AddTransient<IUserService, UserService>();
-builder.Services.AddTransient<IRoleService, RoleService>();
+builder.Services.AddTransient(typeof(IUnitOfWork<>),typeof(UnitOfWork<>));
+builder.Services.AddTransient(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
+builder.Services.AddTransient(typeof(IBasicEndpointService<>), typeof(BasicEndpointService<>));
 
 builder.Services.AddDbContext<FakeRubikStoreContext>(options =>
 {
