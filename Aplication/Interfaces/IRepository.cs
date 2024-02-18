@@ -4,7 +4,7 @@ namespace Aplication.Interfaces
 {
     public interface IRepository<T> where T : BaseEntity
     {
-        Task<IEnumerable<T>> GetAll();
+        IEnumerable<T> GetAll();
         Task<T> GetById(int id);
         Task Add(T element);
         void Update(int id, T element);

@@ -14,9 +14,10 @@ namespace Infraestructure.Repositories
             _context = context;
             _entities = context.Set<T>();
         }
-        public  async Task<IEnumerable<T>> GetAll()
+        public IEnumerable<T> GetAll()
         {
-            return await _entities.ToListAsync();
+            var users = _entities.ToList();
+            return users;
         }
 
         public async Task Add(T element)

@@ -19,6 +19,7 @@ builder.Services.AddAutoMapper(typeof(ProfileMapper));
 builder.Services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<IRoleService, RoleService>();
 
 builder.Services.AddDbContext<FakeRubikStoreContext>(options =>
 {

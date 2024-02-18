@@ -18,9 +18,9 @@ namespace Aplication.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public  async Task<IEnumerable<User>> GetAllUsers()
+        public  IEnumerable<User> GetAllUsers()
         {
-            return await _unitOfWork.UserRepository.GetAll();
+            return  _unitOfWork.UserRepository.GetAll();
         }
     }
 }
