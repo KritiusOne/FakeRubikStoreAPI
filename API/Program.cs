@@ -2,6 +2,7 @@ using Aplication.Entities;
 using Aplication.Interfaces;
 using Aplication.Services;
 using Infraestructure.Data;
+using Infraestructure.Filters;
 using Infraestructure.Mappings;
 using Infraestructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +11,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(opt =>
+{
+    opt.Filters.Add<GlobalExceptionFilter>();
+});
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

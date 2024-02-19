@@ -1,4 +1,5 @@
 ﻿using Aplication.Entities;
+using Aplication.Exceptions;
 using Aplication.Interfaces;
 
 namespace Aplication.Services
@@ -13,6 +14,10 @@ namespace Aplication.Services
 
         public async Task CreateUser(User user)
         {
+            if(user == null)
+            {
+                throw new UserException("Bad request, user is null");
+            }
             await _unitOfWork.UserRepository.Add(user);
             await _unitOfWork.SaveChangesAsync();
         }
