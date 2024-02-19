@@ -8,12 +8,10 @@ namespace Infraestructure.Mappings
     {
         public ProfileMapper()
         {
-            CreateMap<User, UserDTO>();
-            CreateMap<UserDTO, User>();
-
+            CreateMap<User, UserDTO>().ReverseMap();
             CreateMap<Role, RoleDTO>().ReverseMap();
             CreateMap<State, StateDTO>().ReverseMap();
-
+            CreateMap<Category, CategoryDTO>().ReverseMap();
         }
     }
 }

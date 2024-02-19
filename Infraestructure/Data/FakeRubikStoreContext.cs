@@ -43,6 +43,7 @@ public partial class FakeRubikStoreContext : DbContext
     {
         modelBuilder.Entity<Category>(entity =>
         {
+            entity.ToTable("Categorias");
             entity.Property(e => e.Name)
                 .HasMaxLength(50)
                 .IsUnicode(false).HasColumnName("Nombre");

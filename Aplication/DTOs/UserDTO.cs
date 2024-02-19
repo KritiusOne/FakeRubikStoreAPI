@@ -2,6 +2,7 @@
 {
     public class UserDTO
     {
+        public int Id { get; set; }
         public int IdRole { get; set; }
 
         public int IdAddress { get; set; }
