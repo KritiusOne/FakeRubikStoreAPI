@@ -2,15 +2,15 @@
 
 public partial class UserDirection : BaseEntity
 {
-    public string Address { get; set; } = null!;
+    public string? Address { get; set; }
 
-    public string City { get; set; } = null!;
+    public string? City { get; set; }
 
-    public string State { get; set; } = null!;
+    public string? State { get; set; } 
 
-    public string Country { get; set; } = null!;
+    public string? Country { get; set; } 
 
     public string? Description { get; set; }
+    public virtual User? User { get; set; }
 
-    public virtual ICollection<User> Users { get; } = new List<User>();
 }

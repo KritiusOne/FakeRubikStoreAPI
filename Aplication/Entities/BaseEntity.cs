@@ -1,4 +1,6 @@
-﻿namespace Aplication.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Aplication.Entities
 {
     public class BaseEntity
     {

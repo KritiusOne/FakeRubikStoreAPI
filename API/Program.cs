@@ -20,9 +20,11 @@ builder.Services.AddAutoMapper(typeof(ProfileMapper));
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
 builder.Services.AddTransient(typeof(IUnitOfWork<>),typeof(UnitOfWork<>));
-builder.Services.AddTransient(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
 builder.Services.AddTransient(typeof(IBasicEndpointService<>), typeof(BasicEndpointService<>));
 builder.Services.AddTransient(typeof(IUserService<>), typeof(UserService<>));
+builder.Services.AddTransient<IUserDirectionRepoitory, UserDirectionRepository>();
+builder.Services.AddScoped<IDirectionService, DirectionService>();
+
 builder.Services.AddDbContext<FakeRubikStoreContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("dev"));
