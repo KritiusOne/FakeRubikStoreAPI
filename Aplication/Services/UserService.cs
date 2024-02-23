@@ -1,15 +1,21 @@
 ﻿using Aplication.Entities;
 using Aplication.Exceptions;
 using Aplication.Interfaces;
+using Aplication.Options;
 
 namespace Aplication.Services
 {
     public class UserService<T> : IUserService<T> where T : User
     {
         private readonly IUnitOfWork<T> _unitOfWork;
-        public UserService(IUnitOfWork<T> unitOfWork)
+        private readonly PasswordService _passwordService;
+        private readonly IDirectionService _directionService;
+        public UserService(IUnitOfWork<T> unitOfWork, IDirectionService directionService)
         {
+            var options = new PasswordOptions();
+             this._passwordService = new PasswordService(options);
             _unitOfWork = unitOfWork;
+            this._directionService = directionService;
         }
 
         public async Task CreateUser(User user)
@@ -18,6 +24,12 @@ namespace Aplication.Services
             {
                 throw new UserException("Bad request, user is null");
             }
+            //First Rule
+            var Address = await _directionService.CreateVoid();
+            user.IdAddress = Address.Id;
+            user.UserDirectionNav = Address;
+
+            user.Password = _passwordService.Hash(user.Password);
             await _unitOfWork.UserRepository.Add(user);
             await _unitOfWork.SaveChangesAsync();
         }
