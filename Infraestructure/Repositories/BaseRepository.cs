@@ -7,8 +7,8 @@ namespace Infraestructure.Repositories
 {
     public class BaseRepository<T> : IRepository<T> where T : BaseEntity
     {
-        private readonly FakeRubikStoreContext _context;
-        private readonly DbSet<T> _entities;
+        protected readonly FakeRubikStoreContext _context;
+        protected readonly DbSet<T> _entities;
         public BaseRepository(FakeRubikStoreContext context)
         {
             _context = context;
