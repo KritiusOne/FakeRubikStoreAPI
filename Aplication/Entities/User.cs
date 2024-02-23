@@ -11,6 +11,7 @@ public partial class User : BaseEntity
     public string? SecondName { get; set; }
 
     public string Email { get; set; } = null!;
+    public string Password { get; set; } = null!;
 
     public string Phone { get; set; } = null!;
 
