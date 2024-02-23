@@ -13,6 +13,7 @@ namespace Infraestructure.Repositories
         }
 
         public IRepository<User> UserRepository => new UserRepository(_context);
+        public IUserDirectionRepoitory AddressRepo => new UserDirectionRepository(_context);
         public IRepository<T> BaseRepo => new BaseRepository<T>(_context);
         public IRepository<State> StateRepo => new BaseRepository<State>(_context);
 
