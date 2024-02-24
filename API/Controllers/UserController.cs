@@ -31,5 +31,11 @@ namespace API.Controllers
             var users = _userService.GetAllUsers();
             return Ok(users);
         }
+        [HttpGet("login")]
+        public IActionResult LoginUser(string email, string password)
+        {
+            var user = _userService.GetUserByCredentials(email, password);
+            return Ok(user);
+        }
     }
 }
