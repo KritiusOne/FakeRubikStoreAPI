@@ -7,6 +7,8 @@ namespace Aplication.Services
     public class PasswordService : IPasswordService
     {
         private readonly PasswordOptions _options;
+        //private static readonly HashAlgorithmName _hashAlgorithmName = HashAlgorithmName.SHA256;
+        //private const char _delimiter = ';';
         public PasswordService(PasswordOptions passwordOptions)
         {
             this._options = passwordOptions;
