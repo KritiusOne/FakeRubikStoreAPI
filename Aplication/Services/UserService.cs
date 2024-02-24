@@ -38,6 +38,26 @@ namespace Aplication.Services
         {
             return  _unitOfWork.UserRepository.GetAll();
         }
+        public User GetUserByCredentials(string email, string password)
+        {
+            var user = _unitOfWork.UserRepository.GetUserByCredentials(email);
+            if(user != null)
+            {
+                var checkPassword = _passwordService.Check(user.Password, password);
+                if (checkPassword)
+                {
+                    return user;
+
+                }else
+                {
+                    throw new UserException("Error in password");
+                }
+            }
+            else
+            {
+                throw new UserException("User not found");
+            }
+        }
 
     }
 }
