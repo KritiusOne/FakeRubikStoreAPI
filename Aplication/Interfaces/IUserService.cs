@@ -6,5 +6,6 @@ namespace Aplication.Interfaces
     {
         IEnumerable<User> GetAllUsers();
         Task CreateUser(User user);
+        User GetUserByCredentials(string email, string password);
     }
 }
