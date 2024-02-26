@@ -49,12 +49,11 @@ namespace API.Controllers.LogIn_SingIn
             var claims = new[]
             {
                 new Claim("Id", user.Id.ToString()),
-                new Claim(ClaimTypes.Role, user.IdRole.ToString()),
-                new Claim("Address", user.IdAddress.ToString()),
-                new Claim(ClaimTypes.Name, user.Name),
-                new Claim("LastName", user.SecondName),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.MobilePhone, user.Phone)
+                new Claim("IdRole", user.IdRole.ToString()),
+                new Claim("First_Name", user.Name),
+                new Claim("Last_Name", user.SecondName),
+                new Claim("email", user.Email),
+                new Claim("phone", user.Phone)
             };
             //payloads
             var payloads = new JwtPayload(_config["JWT:Issuer"],
