@@ -1,14 +1,13 @@
 ﻿using Aplication.CustomEntities;
+using Aplication.DTOs;
 using Aplication.Entities;
 using Aplication.Interfaces;
 using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using System.Web.Helpers;
 
 namespace API.Controllers.LogIn_SingIn
 {
@@ -32,9 +31,11 @@ namespace API.Controllers.LogIn_SingIn
             if(user != null)
             {
                 var token = GenerateToken(user);
+                var UserDTO = _mapper.Map<UserDTO>(user);
+                HttpContext.Response.Headers.Add("Auth", token);
                 return Ok(new
                 {
-                    token
+                    UserDTO
                 });
             }
             return NotFound();
