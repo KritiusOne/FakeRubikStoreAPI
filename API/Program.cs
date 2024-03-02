@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-
+var _myCors = "cors";
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers(opt =>
 {
@@ -17,6 +17,18 @@ builder.Services.AddControllers(opt =>
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddCors(opt =>
+{
+    opt.AddPolicy(name: _myCors,
+        policy =>
+        {
+            policy.AllowAnyOrigin();
+            policy.AllowAnyHeader();
+            policy.AllowAnyMethod();
+
+        });
+});
 
 builder.Services.AddAutoMapper(typeof(ProfileMapper));
 
@@ -61,7 +73,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseCors(_myCors);
 app.UseAuthorization();
 
 app.MapControllers();
