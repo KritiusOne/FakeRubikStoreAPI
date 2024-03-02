@@ -11,5 +11,5 @@ public partial class Review
 
     public int Rate { get; set; }
 
-    public virtual ICollection<Product> Products { get; } = new List<Product>();
+    public virtual Product Products { get; } = new Product();
 }

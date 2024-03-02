@@ -21,7 +21,7 @@ public partial class Product : BaseEntity
 
     public virtual ICollection<ProductCategory> ProductCategories { get; } = new List<ProductCategory>();
 
-    public virtual Review ReviewNav { get; set; } = null!;
+    public virtual ICollection<Review> ReviewNav { get; set; } = new List<Review>();
 
     public virtual ICollection<OrdersProducts> OrderProducts { get; } = new List<OrdersProducts>();
 
