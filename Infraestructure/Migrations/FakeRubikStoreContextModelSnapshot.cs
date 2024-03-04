@@ -154,9 +154,6 @@ namespace Infraestructure.Migrations
                         .HasColumnType("varchar(200)")
                         .HasColumnName("Descripcion");
 
-                    b.Property<int>("IdReview")
-                        .HasColumnType("int");
-
                     b.Property<string>("Image")
                         .HasMaxLength(50)
                         .IsUnicode(false)
@@ -185,45 +182,38 @@ namespace Infraestructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("IdReview");
-
                     b.ToTable("Products");
                 });
 
             modelBuilder.Entity("Aplication.Entities.ProductCategory", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<int>("IdProduct")
+                        .HasColumnType("int")
+                        .HasColumnName("IdProducto");
 
                     b.Property<int>("IdCategory")
                         .HasColumnType("int")
                         .HasColumnName("IdCategoria");
 
-                    b.Property<int>("IdProduct")
-                        .HasColumnType("int")
-                        .HasColumnName("IdProducto");
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("IdProduct", "IdCategory");
 
                     b.HasIndex("IdCategory");
-
-                    b.HasIndex("IdProduct");
 
                     b.ToTable("Categorias_Productos", (string)null);
                 });
 
             modelBuilder.Entity("Aplication.Entities.ProductsProviders", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("IdProduct")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<int>("IdProvider")
+                        .HasColumnType("int");
 
-                    b.Property<int>("IdProduct")
+                    b.Property<int>("Id")
                         .HasColumnType("int");
 
                     b.Property<int>("IdProductosNavigationId")
@@ -232,10 +222,7 @@ namespace Infraestructure.Migrations
                     b.Property<int>("IdProveedoresNavigationId")
                         .HasColumnType("int");
 
-                    b.Property<int>("IdProvider")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
+                    b.HasKey("IdProduct", "IdProvider");
 
                     b.HasIndex("IdProductosNavigationId");
 
@@ -278,14 +265,21 @@ namespace Infraestructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Descripcion");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
 
                     b.Property<int>("Rate")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("rate");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Reviews");
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("Reviews", (string)null);
                 });
 
             modelBuilder.Entity("Aplication.Entities.Role", b =>
@@ -376,17 +370,12 @@ namespace Infraestructure.Migrations
                         .HasColumnType("varchar(50)")
                         .HasColumnName("Apellido");
 
-                    b.Property<int>("UserDirectionNavId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("IdAddress")
                         .IsUnique();
 
                     b.HasIndex("IdRole");
-
-                    b.HasIndex("UserDirectionNavId");
 
                     b.ToTable("Usuarios", (string)null);
                 });
@@ -490,34 +479,23 @@ namespace Infraestructure.Migrations
                     b.Navigation("ProductNav");
                 });
 
-            modelBuilder.Entity("Aplication.Entities.Product", b =>
-                {
-                    b.HasOne("Aplication.Entities.Review", "ReviewNav")
-                        .WithMany("Products")
-                        .HasForeignKey("IdReview")
-                        .IsRequired()
-                        .HasConstraintName("FK_Productos_Reviews");
-
-                    b.Navigation("ReviewNav");
-                });
-
             modelBuilder.Entity("Aplication.Entities.ProductCategory", b =>
                 {
-                    b.HasOne("Aplication.Entities.Category", "IdCategoriaNavigation")
+                    b.HasOne("Aplication.Entities.Category", "CategoryNav")
                         .WithMany("ProductCategories")
                         .HasForeignKey("IdCategory")
                         .IsRequired()
                         .HasConstraintName("FK_Categorias_Productos_Categorias");
 
-                    b.HasOne("Aplication.Entities.Product", "IdProductoNavigation")
+                    b.HasOne("Aplication.Entities.Product", "ProductNav")
                         .WithMany("ProductCategories")
                         .HasForeignKey("IdProduct")
                         .IsRequired()
                         .HasConstraintName("FK_Categorias_Productos_Productos");
 
-                    b.Navigation("IdCategoriaNavigation");
+                    b.Navigation("CategoryNav");
 
-                    b.Navigation("IdProductoNavigation");
+                    b.Navigation("ProductNav");
                 });
 
             modelBuilder.Entity("Aplication.Entities.ProductsProviders", b =>
@@ -539,25 +517,32 @@ namespace Infraestructure.Migrations
                     b.Navigation("IdProveedoresNavigation");
                 });
 
+            modelBuilder.Entity("Aplication.Entities.Review", b =>
+                {
+                    b.HasOne("Aplication.Entities.Product", "Product")
+                        .WithMany("Reviews")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_Review_Productos");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("Aplication.Entities.User", b =>
                 {
-                    b.HasOne("Aplication.Entities.UserDirection", null)
+                    b.HasOne("Aplication.Entities.UserDirection", "UserDirectionNav")
                         .WithOne("User")
                         .HasForeignKey("Aplication.Entities.User", "IdAddress")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_Usuarios_Direccion");
 
                     b.HasOne("Aplication.Entities.Role", "RoleNav")
                         .WithMany("Users")
                         .HasForeignKey("IdRole")
                         .IsRequired()
                         .HasConstraintName("FK_Usuarios_Rol");
-
-                    b.HasOne("Aplication.Entities.UserDirection", "UserDirectionNav")
-                        .WithMany()
-                        .HasForeignKey("UserDirectionNavId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.Navigation("RoleNav");
 
@@ -586,16 +571,13 @@ namespace Infraestructure.Migrations
                     b.Navigation("ProductCategories");
 
                     b.Navigation("ProvidersProducts");
+
+                    b.Navigation("Reviews");
                 });
 
             modelBuilder.Entity("Aplication.Entities.Provider", b =>
                 {
                     b.Navigation("ProvidersProducts");
-                });
-
-            modelBuilder.Entity("Aplication.Entities.Review", b =>
-                {
-                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("Aplication.Entities.Role", b =>

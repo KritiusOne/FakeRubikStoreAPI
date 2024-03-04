@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Infraestructure.Migrations
 {
     /// <inheritdoc />
-    public partial class SyncChanges : Migration
+    public partial class UpdateRelations : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -55,6 +55,24 @@ namespace Infraestructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Products",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    NombreProducto = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
+                    Price = table.Column<double>(type: "float", nullable: false),
+                    Stock = table.Column<int>(type: "int", nullable: false),
+                    Imagen = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true),
+                    Descripcion = table.Column<string>(type: "varchar(200)", unicode: false, maxLength: 200, nullable: false),
+                    Miniatura = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Products", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Providers",
                 columns: table => new
                 {
@@ -67,20 +85,6 @@ namespace Infraestructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Providers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Reviews",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Rate = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Reviews", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -97,27 +101,74 @@ namespace Infraestructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Products",
+                name: "Categorias_Productos",
+                columns: table => new
+                {
+                    IdCategoria = table.Column<int>(type: "int", nullable: false),
+                    IdProducto = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Categorias_Productos", x => new { x.IdProducto, x.IdCategoria });
+                    table.ForeignKey(
+                        name: "FK_Categorias_Productos_Categorias",
+                        column: x => x.IdCategoria,
+                        principalTable: "Categorias",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Categorias_Productos_Productos",
+                        column: x => x.IdProducto,
+                        principalTable: "Products",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Reviews",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    NombreProducto = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
-                    Price = table.Column<double>(type: "float", nullable: false),
-                    Stock = table.Column<int>(type: "int", nullable: false),
-                    Imagen = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true),
-                    Descripcion = table.Column<string>(type: "varchar(200)", unicode: false, maxLength: 200, nullable: false),
-                    IdReview = table.Column<int>(type: "int", nullable: false),
-                    Miniatura = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false)
+                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    rate = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Products", x => x.Id);
+                    table.PrimaryKey("PK_Reviews", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Productos_Reviews",
-                        column: x => x.IdReview,
-                        principalTable: "Reviews",
-                        principalColumn: "Id");
+                        name: "FK_Review_Productos",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProductsProviders",
+                columns: table => new
+                {
+                    IdProvider = table.Column<int>(type: "int", nullable: false),
+                    IdProduct = table.Column<int>(type: "int", nullable: false),
+                    IdProductosNavigationId = table.Column<int>(type: "int", nullable: false),
+                    IdProveedoresNavigationId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductsProviders", x => new { x.IdProduct, x.IdProvider });
+                    table.ForeignKey(
+                        name: "FK_ProductsProviders_Products_IdProductosNavigationId",
+                        column: x => x.IdProductosNavigationId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ProductsProviders_Providers_IdProveedoresNavigationId",
+                        column: x => x.IdProveedoresNavigationId,
+                        principalTable: "Providers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -132,21 +183,14 @@ namespace Infraestructure.Migrations
                     Apellido = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true),
                     Email = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
                     Contrasena = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    Telefono = table.Column<string>(type: "varchar(30)", unicode: false, maxLength: 30, nullable: false),
-                    UserDirectionNavId = table.Column<int>(type: "int", nullable: false)
+                    Telefono = table.Column<string>(type: "varchar(30)", unicode: false, maxLength: 30, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Usuarios", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Usuarios_Direccion_IdDireccion",
+                        name: "FK_Usuarios_Direccion",
                         column: x => x.IdDireccion,
-                        principalTable: "Direccion",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Usuarios_Direccion_UserDirectionNavId",
-                        column: x => x.UserDirectionNavId,
                         principalTable: "Direccion",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -155,58 +199,6 @@ namespace Infraestructure.Migrations
                         column: x => x.IdRol,
                         principalTable: "Rol",
                         principalColumn: "IdRol");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Categorias_Productos",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    IdCategoria = table.Column<int>(type: "int", nullable: false),
-                    IdProducto = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Categorias_Productos", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Categorias_Productos_Categorias",
-                        column: x => x.IdCategoria,
-                        principalTable: "Categorias",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Categorias_Productos_Productos",
-                        column: x => x.IdProducto,
-                        principalTable: "Products",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ProductsProviders",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    IdProvider = table.Column<int>(type: "int", nullable: false),
-                    IdProduct = table.Column<int>(type: "int", nullable: false),
-                    IdProductosNavigationId = table.Column<int>(type: "int", nullable: false),
-                    IdProveedoresNavigationId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProductsProviders", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ProductsProviders_Products_IdProductosNavigationId",
-                        column: x => x.IdProductosNavigationId,
-                        principalTable: "Products",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ProductsProviders_Providers_IdProveedoresNavigationId",
-                        column: x => x.IdProveedoresNavigationId,
-                        principalTable: "Providers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -292,11 +284,6 @@ namespace Infraestructure.Migrations
                 column: "IdCategoria");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Categorias_Productos_IdProducto",
-                table: "Categorias_Productos",
-                column: "IdProducto");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Envios_IdEstado",
                 table: "Envios",
                 column: "IdEstado");
@@ -327,11 +314,6 @@ namespace Infraestructure.Migrations
                 column: "IdProducto");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Products_IdReview",
-                table: "Products",
-                column: "IdReview");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ProductsProviders_IdProductosNavigationId",
                 table: "ProductsProviders",
                 column: "IdProductosNavigationId");
@@ -340,6 +322,11 @@ namespace Infraestructure.Migrations
                 name: "IX_ProductsProviders_IdProveedoresNavigationId",
                 table: "ProductsProviders",
                 column: "IdProveedoresNavigationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reviews_ProductId",
+                table: "Reviews",
+                column: "ProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Usuarios_IdDireccion",
@@ -351,11 +338,6 @@ namespace Infraestructure.Migrations
                 name: "IX_Usuarios_IdRol",
                 table: "Usuarios",
                 column: "IdRol");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Usuarios_UserDirectionNavId",
-                table: "Usuarios",
-                column: "UserDirectionNavId");
         }
 
         /// <inheritdoc />
@@ -371,22 +353,22 @@ namespace Infraestructure.Migrations
                 name: "ProductsProviders");
 
             migrationBuilder.DropTable(
+                name: "Reviews");
+
+            migrationBuilder.DropTable(
                 name: "Categorias");
 
             migrationBuilder.DropTable(
                 name: "Ordenes");
 
             migrationBuilder.DropTable(
-                name: "Products");
-
-            migrationBuilder.DropTable(
                 name: "Providers");
 
             migrationBuilder.DropTable(
-                name: "Envios");
+                name: "Products");
 
             migrationBuilder.DropTable(
-                name: "Reviews");
+                name: "Envios");
 
             migrationBuilder.DropTable(
                 name: "Estado");

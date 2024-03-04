@@ -15,13 +15,11 @@ public partial class Product : BaseEntity
 
     public string Description { get; set; } = null!;
 
-    public int IdReview { get; set; }
-
     public string Thumbnail { get; set; } = null!;
 
     public virtual ICollection<ProductCategory> ProductCategories { get; } = new List<ProductCategory>();
 
-    public virtual ICollection<Review> ReviewNav { get; set; } = new List<Review>();
+    public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
 
     public virtual ICollection<OrdersProducts> OrderProducts { get; } = new List<OrdersProducts>();
 
