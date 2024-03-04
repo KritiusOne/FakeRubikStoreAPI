@@ -6,7 +6,7 @@ public partial class ProductCategory : BaseEntity
 
     public int IdProduct { get; set; }
 
-    public virtual Category IdCategoriaNavigation { get; set; } = null!;
+    public virtual Category CategoryNav { get; set; } = null!;
 
-    public virtual Product IdProductoNavigation { get; set; } = null!;
+    public virtual Product ProductNav { get; set; } = null!;
 }

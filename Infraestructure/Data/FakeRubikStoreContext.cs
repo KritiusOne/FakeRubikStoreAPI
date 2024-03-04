@@ -42,6 +42,25 @@ public partial class FakeRubikStoreContext : DbContext
     public virtual DbSet<User> Users { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<ProductCategory>()
+            .HasKey(e => new
+            {
+                e.IdProduct,
+                e.IdCategory
+            });
+        modelBuilder.Entity<ProductsProviders>()
+            .HasKey(e => new
+            {
+                e.IdProduct,
+                e.IdProvider
+            });
+        modelBuilder.Entity<OrdersProducts>()
+            .HasKey(e => new
+            {
+                e.IdProduct,
+                e.IdOrder
+            });
+        modelBuilder.Ignore<Category>();
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 

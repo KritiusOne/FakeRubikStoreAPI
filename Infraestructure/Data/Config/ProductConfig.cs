@@ -24,11 +24,6 @@ namespace Infraestructure.Data.Config
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("NombreProducto");
-
-            entity.HasOne(d => d.ReviewNav).WithMany(p => p.Products)
-                .HasForeignKey(d => d.IdReview)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Productos_Reviews");
         }
     }
 }
