@@ -60,6 +60,7 @@ public partial class FakeRubikStoreContext : DbContext
                 e.IdProduct,
                 e.IdOrder
             });
+        modelBuilder.Ignore<Category>();
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 
