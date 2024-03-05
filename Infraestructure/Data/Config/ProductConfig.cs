@@ -8,6 +8,8 @@ namespace Infraestructure.Data.Config
     {
         public void Configure(EntityTypeBuilder<Product> entity)
         {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("Productos");
             entity.Property(e => e.Description)
                 .HasMaxLength(200)
                 .IsUnicode(false)
@@ -24,6 +26,7 @@ namespace Infraestructure.Data.Config
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("NombreProducto");
+            entity.Property(e => e.Price).HasColumnName("Precio");
         }
     }
 }
