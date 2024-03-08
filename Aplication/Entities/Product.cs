@@ -11,7 +11,7 @@ public partial class Product : BaseEntity
 
     public int Stock { get; set; }
 
-    public string? Image { get; set; }
+    public string? Image { get; set; } = null!;
 
     public string Description { get; set; } = null!;
 
