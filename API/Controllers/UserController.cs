@@ -1,4 +1,5 @@
-﻿using Aplication.DTOs;
+﻿using API.Response;
+using Aplication.DTOs;
 using Aplication.Entities;
 using Aplication.Interfaces;
 using AutoMapper;
@@ -29,7 +30,9 @@ namespace API.Controllers
         public IActionResult GetAllUser()
         {
             var users = _userService.GetAllUsers();
-            return Ok(users);
+            var usersDTO = _mapper.Map<IEnumerable<UserDTO>>(users);
+            var response = new ResponseBase<IEnumerable<UserDTO>>(usersDTO, "this is the all users");
+            return Ok(response);
         }
         [HttpGet("login")]
         public IActionResult LoginUser(string email, string password)
