@@ -1,4 +1,5 @@
-﻿using Aplication.DTOs;
+﻿using API.Response;
+using Aplication.DTOs;
 using Aplication.Entities;
 using Aplication.Interfaces;
 using AutoMapper;
@@ -21,7 +22,9 @@ namespace API.Controllers
         public IActionResult Get()
         {
             var roles = _roleService.GetAll();
-            return Ok(roles);
+            var rolesDTO = _mapper.Map<IEnumerable<RoleDTO>>(roles);
+            var response = new ResponseBase<IEnumerable<RoleDTO>>(rolesDTO, "This is the all roles");
+            return Ok(response);
         }
         [HttpPost]
         public async  Task<IActionResult> Post(RoleDTO roleDTO)
