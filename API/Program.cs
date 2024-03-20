@@ -39,6 +39,8 @@ builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient(typeof(IUserService<>), typeof(UserService<>));
 builder.Services.AddTransient<IUserDirectionRepoitory, UserDirectionRepository>();
 builder.Services.AddScoped<IDirectionService, DirectionService>();
+builder.Services.AddTransient<IProductService, ProductService>();
+builder.Services.AddTransient<IProductRepository, ProductRepository>();
 
 builder.Services.AddDbContext<FakeRubikStoreContext>(options =>
 {
