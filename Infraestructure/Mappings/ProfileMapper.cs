@@ -12,6 +12,7 @@ namespace Infraestructure.Mappings
             CreateMap<Role, RoleDTO>().ReverseMap();
             CreateMap<State, StateDTO>().ReverseMap();
             CreateMap<Category, CategoryDTO>().ReverseMap();
+            CreateMap<Product, ProductDTO>().ReverseMap();
         }
     }
 }
