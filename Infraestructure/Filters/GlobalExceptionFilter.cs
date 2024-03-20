@@ -26,6 +26,23 @@ namespace Infraestructure.Filters
                 filterContext.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 filterContext.ExceptionHandled = true;
             }
+            if (filterContext.Exception.GetType() == typeof(BaseException))
+            {
+                var exception = (BaseException)filterContext.Exception;
+                var validation = new
+                {
+                    Status = 400,
+                    Title = "Bad Request",
+                    detail = exception.Message
+                };
+                var json = new
+                {
+                    errors = new[] { validation }
+                };
+                filterContext.Result = new BadRequestObjectResult(json);
+                filterContext.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                filterContext.ExceptionHandled = true;
+            }
         }
     }
 }
