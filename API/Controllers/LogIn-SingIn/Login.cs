@@ -1,4 +1,5 @@
-﻿using Aplication.CustomEntities;
+﻿using API.Response;
+using Aplication.CustomEntities;
 using Aplication.DTOs;
 using Aplication.Entities;
 using Aplication.Interfaces;
@@ -33,10 +34,7 @@ namespace API.Controllers.LogIn_SingIn
                 var token = GenerateToken(user);
                 var UserDTO = _mapper.Map<UserDTO>(user);
                 HttpContext.Response.Headers.Add("Auth", token);
-                return Ok(new
-                {
-                    UserDTO
-                });
+                return Ok(new ResponseBase<UserDTO>(UserDTO, "This is the data of user"));
             }
             return NotFound();
         }
