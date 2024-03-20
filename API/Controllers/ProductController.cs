@@ -1,4 +1,5 @@
-﻿using Aplication.DTOs;
+﻿using API.Response;
+using Aplication.DTOs;
 using Aplication.Entities;
 using Aplication.Interfaces;
 using AutoMapper;
@@ -21,7 +22,9 @@ namespace API.Controllers
         public IActionResult Get()
         {
             var Products = _productService.GetAllProducts();
-            return Ok(Products);
+            var productsDTO = _mapper.Map<IEnumerable<ProductDTO>>(Products);
+            var response = new ResponseBase<IEnumerable<ProductDTO>>(productsDTO, "This is all products");
+            return Ok(response);
         }
         [HttpPost]
         public async Task<IActionResult> Post(ProductDTO productDTO)
