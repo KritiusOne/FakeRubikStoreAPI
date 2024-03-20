@@ -1,4 +1,5 @@
-﻿using Aplication.DTOs;
+﻿using API.Response;
+using Aplication.DTOs;
 using Aplication.Entities;
 using Aplication.Interfaces;
 using AutoMapper;
@@ -22,7 +23,9 @@ namespace API.Controllers
         public IActionResult Get()
         {
             var Categories = _basicEndpoint.GetAll();
-            return Ok(Categories);
+            var categoriesDTO = _mapper.Map<IEnumerable<CategoryDTO>>(Categories);
+            var response = new ResponseBase<IEnumerable<CategoryDTO>>(categoriesDTO, "This is the all categories");
+            return Ok(response);
         }
         [HttpPost]
         public async Task<IActionResult> Post(CategoryDTO categoryDTO)
