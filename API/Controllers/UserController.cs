@@ -34,11 +34,5 @@ namespace API.Controllers
             var response = new ResponseBase<IEnumerable<UserDTO>>(usersDTO, "this is the all users");
             return Ok(response);
         }
-        [HttpGet("login")]
-        public IActionResult LoginUser(string email, string password)
-        {
-            var user = _userService.GetUserByCredentials(email, password);
-            return Ok(user);
-        }
     }
 }
