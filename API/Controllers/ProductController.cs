@@ -1,4 +1,5 @@
 ﻿using API.Response;
+using Aplication.CustomEntities;
 using Aplication.DTOs;
 using Aplication.Entities;
 using Aplication.Interfaces;
@@ -23,7 +24,19 @@ namespace API.Controllers
         {
             var Products = _productService.GetAllProducts();
             var productsDTO = _mapper.Map<IEnumerable<ProductDTO>>(Products);
-            var response = new ResponseBase<IEnumerable<ProductDTO>>(productsDTO, "This is all products");
+            MetaData metaData = new MetaData()
+            {
+                CurrentPage = Products.CurrentPage,
+                HasNextPage = Products.hasNextPage,
+                HasPreviousPage = Products.hasPreviousPage,
+                PageSize = Products.PageSize,
+                TotalCount = Products.PageCount,
+                TotalPage = Products.TotalPages
+            };
+            var response = new ResponsePagination<IEnumerable<ProductDTO>>(productsDTO, 
+                "This is all products",
+                200, 
+                metaData);
             return Ok(response);
         }
         [HttpPost]

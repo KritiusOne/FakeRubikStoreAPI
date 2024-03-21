@@ -1,4 +1,5 @@
 ﻿using API.Response;
+using Aplication.CustomEntities;
 using Aplication.DTOs;
 using Aplication.Entities;
 using Aplication.Interfaces;
@@ -31,7 +32,19 @@ namespace API.Controllers
         {
             var users = _userService.GetAllUsers();
             var usersDTO = _mapper.Map<IEnumerable<UserDTO>>(users);
-            var response = new ResponseBase<IEnumerable<UserDTO>>(usersDTO, "this is the all users");
+            MetaData metaData = new MetaData()
+            {
+                CurrentPage = users.CurrentPage,
+                HasNextPage = users.hasNextPage,
+                HasPreviousPage = users.hasPreviousPage,
+                PageSize = users.PageSize,
+                TotalCount = users.PageCount,
+                TotalPage = users.TotalPages
+            };
+            var response = new ResponsePagination<IEnumerable<UserDTO>>(usersDTO,
+                "this is the all users",
+                200,
+                metaData);
             return Ok(response);
         }
     }
