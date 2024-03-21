@@ -1,4 +1,5 @@
-﻿using Aplication.Entities;
+﻿using Aplication.CustomEntities;
+using Aplication.Entities;
 using Aplication.Exceptions;
 using Aplication.Interfaces;
 
@@ -12,10 +13,11 @@ namespace Aplication.Services
             this._unitOfWork = unit;
         }
 
-        public IEnumerable<Product> GetAllProducts()
+        public PagedList<Product> GetAllProducts()
         {
             var Prod = _unitOfWork.ProductRepo.GetAll();
-            return Prod;
+            var paginationProducts = PagedList<Product>.CreatedPagedList(Prod, 1, 20);
+            return paginationProducts;
         }
 
         public async Task AddProduct(Product product)
