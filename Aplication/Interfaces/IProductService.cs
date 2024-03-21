@@ -1,10 +1,11 @@
-﻿using Aplication.Entities;
+﻿using Aplication.CustomEntities;
+using Aplication.Entities;
 
 namespace Aplication.Interfaces
 {
     public interface IProductService
     {
-        IEnumerable<Product> GetAllProducts();
+        PagedList<Product> GetAllProducts();
         Task AddProduct(Product product);
 
     }
