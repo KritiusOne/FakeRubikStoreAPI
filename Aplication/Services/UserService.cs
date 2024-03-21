@@ -1,4 +1,5 @@
-﻿using Aplication.Entities;
+﻿using Aplication.CustomEntities;
+using Aplication.Entities;
 using Aplication.Exceptions;
 using Aplication.Interfaces;
 using Aplication.Options;
@@ -34,9 +35,11 @@ namespace Aplication.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public  IEnumerable<User> GetAllUsers()
+        public PagedList<User> GetAllUsers()
         {
-            return  _unitOfWork.UserRepository.GetAll();
+            var AllUsers = _unitOfWork.UserRepository.GetAll();
+            var usersPagination = PagedList<User>.CreatedPagedList(AllUsers, 1, 10);
+            return usersPagination;
         }
         public User GetUserByCredentials(string email, string password)
         {
