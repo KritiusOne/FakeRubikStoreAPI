@@ -17,7 +17,7 @@ builder.Services.AddControllers(opt =>
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddCors(opt =>
 {
     opt.AddPolicy(name: _myCors,
@@ -41,6 +41,15 @@ builder.Services.AddTransient<IUserDirectionRepoitory, UserDirectionRepository>(
 builder.Services.AddScoped<IDirectionService, DirectionService>();
 builder.Services.AddTransient<IProductService, ProductService>();
 builder.Services.AddTransient<IProductRepository, ProductRepository>();
+
+builder.Services.AddSingleton<IUriService>(provider =>
+{
+    var accesor = provider.GetRequiredService<IHttpContextAccessor>();
+    var request = accesor.HttpContext.Request;
+    var absoluteUri = string.Concat(request.Scheme, "://", request.Host.ToUriComponent());
+    Console.WriteLine(absoluteUri);
+    return new UriService(absoluteUri);
+});
 
 builder.Services.AddDbContext<FakeRubikStoreContext>(options =>
 {
