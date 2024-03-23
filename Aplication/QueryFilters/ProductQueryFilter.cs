@@ -7,5 +7,7 @@
         public int? MaxPrice { get; set; }
         public string? NameProduct { get; set; }
         public string? DescriptionProduct { get; set; }
+        public int PageSize { get; set; }
+        public int PageNumber { get; set; }
     }
 }
