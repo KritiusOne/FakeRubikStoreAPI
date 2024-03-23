@@ -3,8 +3,10 @@ using Aplication.CustomEntities;
 using Aplication.DTOs;
 using Aplication.Entities;
 using Aplication.Interfaces;
+using Aplication.QueryFilters;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace API.Controllers
 {
@@ -14,16 +16,37 @@ namespace API.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IProductService _productService;
-        public ProductController(IMapper map, IProductService productService)
+        private readonly IUriService _uriService;
+        public ProductController(IMapper map, IProductService productService, IUriService uriService)
         {
             this._productService = productService;
             _mapper = map;
+            this._uriService = uriService;
         }
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult Get([FromQuery] ProductQueryFilter filters)
         {
-            var Products = _productService.GetAllProducts();
+            var numberPrevious = filters.PageNumber - 1;
+            var numberNext = filters.PageNumber + 1;
+            var Products = _productService.GetAllProducts(filters);
             var productsDTO = _mapper.Map<IEnumerable<ProductDTO>>(Products);
+            Dictionary<string, string> queryParams = new Dictionary<string, string>
+            {
+                {"ProductID", filters.ProductID.ToString() },
+                {"MinPrice", filters.MinPrice.ToString()},
+                {"MaxPrice", filters.MaxPrice.ToString() },
+                {"NameProduct", filters.NameProduct },
+                {"DescriptionProduct", filters.DescriptionProduct },
+                {"PageSize", filters.PageSize == 0 ? "1" : filters.PageSize.ToString() }
+            };
+            var previousQueryParams = queryParams;
+            previousQueryParams["PageNumber"] = Products.hasPreviousPage == false? "false" : numberPrevious.ToString();
+            var previousParamsURL = QueryHelpers.AddQueryString("https://localhost:7220/api/Product", previousQueryParams);
+
+            var nextQueryParams = queryParams;
+            nextQueryParams["PageNumber"] = Products.hasNextPage == true ? numberNext.ToString() : "false";
+            var nextParamsURL = QueryHelpers.AddQueryString("https://localhost:7220/api/Product", nextQueryParams);
+
             MetaData metaData = new MetaData()
             {
                 CurrentPage = Products.CurrentPage,
@@ -31,7 +54,9 @@ namespace API.Controllers
                 HasPreviousPage = Products.hasPreviousPage,
                 PageSize = Products.PageSize,
                 TotalCount = Products.PageCount,
-                TotalPage = Products.TotalPages
+                TotalPage = Products.TotalPages,
+                NextPageURL = _uriService.GetPostPaginationUri(filters, nextParamsURL).ToString(),
+                PreviousPageURL = _uriService.GetPostPaginationUri(filters, previousParamsURL).ToString()
             };
             var response = new ResponsePagination<IEnumerable<ProductDTO>>(productsDTO, 
                 "This is all products",
