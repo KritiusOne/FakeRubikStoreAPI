@@ -2,6 +2,7 @@
 using Aplication.Entities;
 using Aplication.Exceptions;
 using Aplication.Interfaces;
+using Aplication.QueryFilters;
 
 namespace Aplication.Services
 {
@@ -13,10 +14,10 @@ namespace Aplication.Services
             this._unitOfWork = unit;
         }
 
-        public PagedList<Product> GetAllProducts()
+        public PagedList<Product> GetAllProducts(ProductQueryFilter filters)
         {
             var Prod = _unitOfWork.ProductRepo.GetAll();
-            var paginationProducts = PagedList<Product>.CreatedPagedList(Prod, 1, 20);
+            var paginationProducts = PagedList<Product>.CreatedPagedList(Prod, filters.PageNumber, filters.PageSize);
             return paginationProducts;
         }
 

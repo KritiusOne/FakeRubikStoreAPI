@@ -1,11 +1,12 @@
 ﻿using Aplication.CustomEntities;
 using Aplication.Entities;
+using Aplication.QueryFilters;
 
 namespace Aplication.Interfaces
 {
     public interface IProductService
     {
-        PagedList<Product> GetAllProducts();
+        PagedList<Product> GetAllProducts(ProductQueryFilter filters);
         Task AddProduct(Product product);
 
     }
