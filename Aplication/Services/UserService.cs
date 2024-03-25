@@ -34,7 +34,7 @@ namespace Aplication.Services
             await _unitOfWork.UserRepository.Add(user);
             await _unitOfWork.SaveChangesAsync();
         }
-
+        
         public PagedList<User> GetAllUsers()
         {
             var AllUsers = _unitOfWork.UserRepository.GetAll();
@@ -60,6 +60,15 @@ namespace Aplication.Services
             {
                 throw new UserException("User not found");
             }
+        }
+        public async Task<User> NewUserRegister(User user)
+        {
+            //First Rule
+            var Address = await _directionService.CreateVoid();
+            user.IdAddress = Address.Id;
+            user.UserDirectionNav = Address;
+            var newUser = await _unitOfWork.UserRepository.AddAndReturnUser(user);
+            return newUser;
         }
 
     }
