@@ -59,7 +59,7 @@ namespace API.Controllers.LogIn_SingIn
                 _config["JWT:Audience"],
                 claims,
                 DateTime.Now,
-                DateTime.UtcNow.AddMinutes(10)
+                DateTime.UtcNow.AddHours(10)
                 );
 
             //Token
