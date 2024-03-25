@@ -15,5 +15,12 @@ namespace Infraestructure.Repositories
             var user = _context.Users.Where(p => p.Email == email).FirstOrDefault();
             return user;
         }
+        public async Task<User> AddAndReturnUser(User user)
+        {
+            await _entities.AddAsync(user);
+            await _context.SaveChangesAsync();
+            var newEntity = _entities.FirstOrDefault(e => e.Email == user.Email);
+            return newEntity;
+        }
     }
 }
