@@ -41,11 +41,11 @@ namespace API.Controllers
             };
             var previousQueryParams = queryParams;
             previousQueryParams["PageNumber"] = Products.hasPreviousPage == false? "false" : numberPrevious.ToString();
-            var previousParamsURL = QueryHelpers.AddQueryString("https://localhost:7220/api/Product", previousQueryParams);
+            var previousParamsURL = QueryHelpers.AddQueryString("https://apifakerubikstore.azurewebsites.net/api/Product", previousQueryParams);
 
             var nextQueryParams = queryParams;
             nextQueryParams["PageNumber"] = Products.hasNextPage == true ? numberNext.ToString() : "false";
-            var nextParamsURL = QueryHelpers.AddQueryString("https://localhost:7220/api/Product", nextQueryParams);
+            var nextParamsURL = QueryHelpers.AddQueryString("https://apifakerubikstore.azurewebsites.net/api/Product", nextQueryParams);
 
             MetaData metaData = new MetaData()
             {
