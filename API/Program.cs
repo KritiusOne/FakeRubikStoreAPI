@@ -53,7 +53,7 @@ builder.Services.AddSingleton<IUriService>(provider =>
 
 builder.Services.AddDbContext<FakeRubikStoreContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("dev"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Prod"));
 });
 
 builder.Services.AddAuthentication(opt =>
