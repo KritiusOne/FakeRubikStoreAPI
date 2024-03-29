@@ -33,8 +33,10 @@ namespace API.Controllers.LogIn_SingIn
             {
                 var token = GenerateToken(user);
                 var UserDTO = _mapper.Map<UserDTO>(user);
-                HttpContext.Response.Headers.Add("Auth", token);
-                return Ok(new ResponseBase<UserDTO>(UserDTO, "This is the data of user"));
+                return Ok(new ResponseWithToken<UserDTO>(
+                    "This is the data of user", 
+                    UserDTO, 
+                    $"Bearer "+token));
             }
             return NotFound();
         }
