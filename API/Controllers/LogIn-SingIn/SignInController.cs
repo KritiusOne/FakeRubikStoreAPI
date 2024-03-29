@@ -31,9 +31,10 @@ namespace API.Controllers.LogIn_SingIn
             var newUser = await _userService.NewUserRegister(user);
             var newUserDTO = _mapper.Map<UserDTO>(newUser);
             var token = GenerateToken(newUser);
-            HttpContext.Response.Headers.Add("Auth", token);
-
-            var response = new ResponseBase<UserDTO>(newUserDTO, "The register is succes");
+            var response = new ResponseWithToken<UserDTO>(
+                "The register is succes",
+                newUserDTO,
+                $"Bearer "+token);
             return Ok(response);
         }
         private string GenerateToken(User user)
