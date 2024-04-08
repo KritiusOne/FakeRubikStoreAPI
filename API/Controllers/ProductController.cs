@@ -64,6 +64,14 @@ namespace API.Controllers
                 metaData);
             return Ok(response);
         }
+        [HttpGet("id")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var ProductSelected = await _productService.GetById(id);
+            var productDTO = _mapper.Map<ProductDTO>(ProductSelected);
+            var response = new ResponseBase<ProductDTO>(productDTO, "This is the product selected");
+            return Ok(response);
+        }
         [HttpPost]
         public async Task<IActionResult> Post(ProductDTO productDTO)
         {
