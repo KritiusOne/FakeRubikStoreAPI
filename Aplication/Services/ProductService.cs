@@ -30,5 +30,9 @@ namespace Aplication.Services
             await _unitOfWork.ProductRepo.Add(product);
             await _unitOfWork.SaveChangesAsync();
         }
+        public async Task<Product> GetById(int id)
+        {
+            return await _unitOfWork.ProductRepo.GetById(id);
+        }
     }
 }
