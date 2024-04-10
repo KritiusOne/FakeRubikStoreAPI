@@ -7,6 +7,7 @@ namespace Aplication.Interfaces
         IUserRepository UserRepository { get; }
         IUserDirectionRepoitory AddressRepo { get; }
         IProductRepository ProductRepo { get; }
+        IReviewRepository ReviewRepo { get; }
         IRepository<T> BaseRepo { get;  }
         void SaveChanges();
         Task SaveChangesAsync();
