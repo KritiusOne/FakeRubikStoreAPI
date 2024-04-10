@@ -22,4 +22,5 @@ public partial class User : BaseEntity
     public virtual Role RoleNav { get; set; } = null!;
 
     public virtual ICollection<Order> Orders { get; } = new List<Order>();
+    public virtual ICollection<Review> Reviews { get; } = new List<Review>();
 }
