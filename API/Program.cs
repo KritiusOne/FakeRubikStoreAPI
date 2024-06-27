@@ -41,6 +41,8 @@ builder.Services.AddTransient<IUserDirectionRepoitory, UserDirectionRepository>(
 builder.Services.AddScoped<IDirectionService, DirectionService>();
 builder.Services.AddTransient<IProductService, ProductService>();
 builder.Services.AddTransient<IProductRepository, ProductRepository>();
+builder.Services.AddTransient<IReviewServices, ReviewServices>();
+builder.Services.AddTransient<IReviewRepository, ReviewRepository>();
 
 builder.Services.AddSingleton<IUriService>(provider =>
 {
@@ -53,7 +55,7 @@ builder.Services.AddSingleton<IUriService>(provider =>
 
 builder.Services.AddDbContext<FakeRubikStoreContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("Prod"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Dev"));
 });
 
 builder.Services.AddAuthentication(opt =>
@@ -76,12 +78,9 @@ builder.Services.AddAuthentication(opt =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
+
 
 app.UseHttpsRedirection();
 app.UseCors(_myCors);
