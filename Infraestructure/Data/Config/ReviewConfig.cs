@@ -8,7 +8,6 @@ namespace Infraestructure.Data.Config
     {
         public void Configure(EntityTypeBuilder<Review> entity)
         {
-            entity.HasKey(e => e.Id);
             entity.ToTable("Reviews");
 
             entity.Property(e => e.Rate).HasColumnName("rate");
