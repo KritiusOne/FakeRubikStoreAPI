@@ -60,6 +60,12 @@ public partial class FakeRubikStoreContext : DbContext
                 e.IdProduct,
                 e.IdOrder
             });
+        modelBuilder.Entity<Review>()
+            .HasKey(e => new
+            {
+                e.ProductId,
+                e.UserId
+            });
         modelBuilder.Ignore<Category>();
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
