@@ -16,7 +16,7 @@ namespace Aplication.Services
 
         public PagedList<Product> GetAllProducts(ProductQueryFilter filters)
         {
-            var Prod = _unitOfWork.ProductRepo.GetAll();
+            var Prod = _unitOfWork.ProductRepo.GetAllWithTables();
             var paginationProducts = PagedList<Product>.CreatedPagedList(Prod, filters.PageNumber, filters.PageSize);
             return paginationProducts;
         }

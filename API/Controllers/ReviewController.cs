@@ -27,10 +27,14 @@ namespace API.Controllers
             var response = new ResponseBase<IEnumerable<ReviewDTO>>(AllReviewsDTO, "This is the all reviews");
             return Ok(response);
         }
-        [HttpGet("id")]
-        public async Task<IActionResult> GetById(int id)
+        [HttpGet("{productId}/{userId}")]
+        public IActionResult GetById(int productId, int userId)
         {
-            var AllReviewsById = await _review.GetReviewById(id);
+            var AllReviewsById = _review.GetReviewById(productId, userId);
+            if(AllReviewsById == null)
+            {
+                return NotFound("No existe dicha Review");
+            }
             var AllReviews = _mapper.Map<ReviewDTO>(AllReviewsById);
             var response = new ResponseBase<ReviewDTO>(AllReviews, "This is the reviews from the this ID");
             return Ok(response);
