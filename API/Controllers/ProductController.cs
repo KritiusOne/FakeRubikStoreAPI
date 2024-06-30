@@ -1,6 +1,6 @@
 ﻿using API.Response;
 using Aplication.CustomEntities;
-using Aplication.DTOs;
+using Aplication.DTOs.Products;
 using Aplication.Entities;
 using Aplication.Interfaces;
 using Aplication.QueryFilters;
@@ -29,7 +29,7 @@ namespace API.Controllers
             var numberPrevious = filters.PageNumber - 1;
             var numberNext = filters.PageNumber + 1;
             var Products = _productService.GetAllProducts(filters);
-            var productsDTO = _mapper.Map<IEnumerable<ProductDTO>>(Products);
+            var productsDTO = _mapper.Map<IEnumerable<ProductBasicInfoDTO>>(Products);
             Dictionary<string, string> queryParams = new Dictionary<string, string>
             {
                 {"ProductID", filters.ProductID.ToString() },
@@ -40,7 +40,7 @@ namespace API.Controllers
                 {"PageSize", filters.PageSize == 0 ? "1" : filters.PageSize.ToString() }
             };
             var previousQueryParams = queryParams;
-            previousQueryParams["PageNumber"] = Products.hasPreviousPage == false? "false" : numberPrevious.ToString();
+            previousQueryParams["PageNumber"] = Products.hasPreviousPage == false ? "false" : numberPrevious.ToString();
             var previousParamsURL = QueryHelpers.AddQueryString("https://apifakerubikstore.azurewebsites.net/api/Product", previousQueryParams);
 
             var nextQueryParams = queryParams;
@@ -58,7 +58,7 @@ namespace API.Controllers
                 NextPageURL = _uriService.GetPostPaginationUri(filters, nextParamsURL).ToString(),
                 PreviousPageURL = _uriService.GetPostPaginationUri(filters, previousParamsURL).ToString()
             };
-            var response = new ResponsePagination<IEnumerable<ProductDTO>>(productsDTO, 
+            var response = new ResponsePagination<IEnumerable<ProductBasicInfoDTO>>(productsDTO, 
                 "This is all products",
                 200, 
                 metaData);
