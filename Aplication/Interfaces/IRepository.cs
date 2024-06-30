@@ -2,7 +2,7 @@
 
 namespace Aplication.Interfaces
 {
-    public interface IRepository<T> where T : BaseEntity
+    public interface IRepository<T> where T : class
     {
         IEnumerable<T> GetAll();
         Task<T> GetById(int id);

@@ -2,7 +2,7 @@
 
 namespace Aplication.Interfaces
 {
-    public interface IUnitOfWork<T> : IDisposable where T : BaseEntity
+    public interface IUnitOfWork<T> : IDisposable where T : class
     {
         IUserRepository UserRepository { get; }
         IUserDirectionRepoitory AddressRepo { get; }
