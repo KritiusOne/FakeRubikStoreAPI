@@ -6,5 +6,6 @@ namespace Aplication.Interfaces
     {
         IEnumerable<Review> SearchReviewFromIdProduct(int idProduct);
         (Product, User) SearchUserAndProduct(int idProduct, int IdUser);
+        Review GetReview(int productId, int userId);
     }
 }

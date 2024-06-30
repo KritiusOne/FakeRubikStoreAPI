@@ -5,7 +5,7 @@ namespace Aplication.Interfaces
     public interface IReviewServices
     {
         IEnumerable<Review> GetReviews();
-        Task<Review> GetReviewById(int id);
+        Review GetReviewById(int productId, int userId);
         Task CreateReview(Review review);
     }
 }
