@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infraestructure.Repositories
 {
-    public class BaseRepository<T> : IRepository<T> where T : BaseEntity
+    public class BaseRepository<T> : IRepository<T> where T : class
     {
         protected readonly FakeRubikStoreContext _context;
         protected readonly DbSet<T> _entities;

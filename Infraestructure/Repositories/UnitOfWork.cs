@@ -4,7 +4,7 @@ using Infraestructure.Data;
 
 namespace Infraestructure.Repositories
 {
-    public class UnitOfWork<T> : IUnitOfWork<T> where T : BaseEntity
+    public class UnitOfWork<T> : IUnitOfWork<T> where T : class
     {
         private readonly FakeRubikStoreContext _context;
         public UnitOfWork(FakeRubikStoreContext contx)
