@@ -1,4 +1,5 @@
 ﻿using Aplication.DTOs;
+using Aplication.DTOs.Products;
 using Aplication.Entities;
 using AutoMapper;
 
@@ -13,9 +14,8 @@ namespace Infraestructure.Mappings
             CreateMap<State, StateDTO>().ReverseMap();
             CreateMap<Category, CategoryDTO>().ReverseMap();
             CreateMap<Product, ProductDTO>().ReverseMap();
+            CreateMap<Product, ProductBasicInfoDTO>().ReverseMap();
             CreateMap<Review, ReviewDTO>()
-                .ForMember(dest => dest.ProductId, opt => opt.MapFrom(src => src.Product.Id))
-                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.Usuario.Id))
                 .ReverseMap();
         }
     }
