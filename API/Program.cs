@@ -8,11 +8,16 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+
 var _myCors = "cors";
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers(opt =>
 {
     opt.Filters.Add<GlobalExceptionFilter>();
+}).AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+    options.JsonSerializerOptions.WriteIndented = true;
 });
 
 builder.Services.AddEndpointsApiExplorer();
