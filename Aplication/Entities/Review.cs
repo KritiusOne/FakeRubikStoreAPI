@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Aplication.Entities;
 
-public partial class Review : BaseEntity
+public partial class Review
 {
     public int ProductId { get; set; }
 
@@ -13,6 +13,6 @@ public partial class Review : BaseEntity
 
     public int Rate { get; set; }
 
-    public virtual Product Product { get; } = new Product();
-    public virtual User Usuario { get; } = new User();
+    public virtual Product Product { get; set; } = new Product();
+    public virtual User Usuario { get; set; } = new User();
 }
