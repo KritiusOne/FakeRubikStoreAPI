@@ -22,5 +22,10 @@ namespace Infraestructure.Repositories
             var FindUser = _context.Users.FirstOrDefault(user => user.Id == IdUser);
             return (FindProduct, FindUser);
         }
+        public Review GetReview(int productId, int userId)
+        {
+            var existingReview = _entities.FirstOrDefault(opt => opt.UserId == userId && opt.ProductId == productId);
+            return existingReview;
+        }
     }
 }
