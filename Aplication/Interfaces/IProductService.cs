@@ -8,6 +8,6 @@ namespace Aplication.Interfaces
     {
         PagedList<Product> GetAllProducts(ProductQueryFilter filters);
         Task AddProduct(Product product);
-        Task<Product> GetById(int id);
+        Product GetById(int id);
     }
 }
