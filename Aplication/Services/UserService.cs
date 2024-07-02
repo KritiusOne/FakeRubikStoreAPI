@@ -19,22 +19,6 @@ namespace Aplication.Services
             this._directionService = directionService;
         }
 
-        public async Task CreateUser(User user)
-        {
-            if(user == null)
-            {
-                throw new UserException("Bad request, user is null");
-            }
-            //First Rule
-            var Address = await _directionService.CreateVoid();
-            user.IdAddress = Address.Id;
-            user.UserDirectionNav = Address;
-
-            user.Password = _passwordService.Hash(user.Password);
-            await _unitOfWork.UserRepository.Add(user);
-            await _unitOfWork.SaveChangesAsync();
-        }
-        
         public PagedList<User> GetAllUsers()
         {
             var AllUsers = _unitOfWork.UserRepository.GetAll();
@@ -63,12 +47,29 @@ namespace Aplication.Services
         }
         public async Task<User> NewUserRegister(User user)
         {
+            if (user == null)
+            {
+                throw new UserException("Bad request, user is null");
+            }
+            //check exist other users with this email
+            var checkedUser = _unitOfWork.UserRepository.GetUserByCredentials(user.Email);
+            if (checkedUser != null)
+            {
+                throw new UserException("Bad request, exist other user with this email");
+            }
             //First Rule
             var Address = await _directionService.CreateVoid();
             user.IdAddress = Address.Id;
             user.UserDirectionNav = Address;
+
+            user.Password = _passwordService.Hash(user.Password);
             var newUser = await _unitOfWork.UserRepository.AddAndReturnUser(user);
             return newUser;
+        }
+        public async Task DeleteUser(int id)
+        {
+            await _unitOfWork.UserRepository.Delete(id);
+            await _unitOfWork.SaveChangesAsync();
         }
 
     }
