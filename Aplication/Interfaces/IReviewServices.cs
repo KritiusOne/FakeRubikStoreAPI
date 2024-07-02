@@ -7,5 +7,6 @@ namespace Aplication.Interfaces
         IEnumerable<Review> GetReviews();
         Review GetReviewById(int productId, int userId);
         Task CreateReview(Review review);
+        Task UpdateReview(int productId, int userId, Review review);
     }
 }

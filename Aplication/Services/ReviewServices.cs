@@ -36,5 +36,17 @@ namespace Aplication.Services
             await _unitOfWork.ReviewRepo.Add(review);
             await _unitOfWork.SaveChangesAsync();
         }
+
+        public async Task UpdateReview(int productId, int userId, Review review)
+        {
+            var reviewActual = _unitOfWork.ReviewRepo.GetReview(productId, userId);
+            if(reviewActual == null)
+            {
+                throw new BaseException("The review to modify not exist");
+            }
+            reviewActual.Description = review.Description;
+            reviewActual.Rate = review.Rate;
+            await _unitOfWork.SaveChangesAsync();
+        }
     }
 }
