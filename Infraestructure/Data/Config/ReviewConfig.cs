@@ -20,7 +20,8 @@ namespace Infraestructure.Data.Config
                 .HasConstraintName("FK_Review_Productos");
             entity.HasOne(e => e.Usuario).WithMany(x => x.Reviews)
                 .HasForeignKey(e => e.UserId)
-                .HasConstraintName("FK_Reviews_Usuarios");
+                .HasConstraintName("FK_Reviews_Usuarios")
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
