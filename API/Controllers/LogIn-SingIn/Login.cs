@@ -32,11 +32,9 @@ namespace API.Controllers.LogIn_SingIn
             if(user != null)
             {
                 var token = GenerateToken(user);
-                var UserDTO = _mapper.Map<UserDTO>(user);
-                return Ok(new ResponseWithToken<UserDTO>(
-                    "This is the data of user", 
-                    UserDTO, 
-                    $"Bearer "+token));
+                return Ok(new ResponseWithToken<string>(
+                    "The login is success. This is the JWT",token, "Bearer"
+                    ));
             }
             return NotFound();
         }
