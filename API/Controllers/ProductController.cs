@@ -65,11 +65,11 @@ namespace API.Controllers
             return Ok(response);
         }
         [HttpGet("id")]
-        public async Task<IActionResult> GetById(int id)
+        public IActionResult GetById(int id)
         {
-            var ProductSelected = await _productService.GetById(id);
-            var productDTO = _mapper.Map<ProductDTO>(ProductSelected);
-            var response = new ResponseBase<ProductDTO>(productDTO, "This is the product selected");
+            var ProductSelected = _productService.GetById(id);
+            var productDTO = _mapper.Map<ProductWithAllDataDTO>(ProductSelected);
+            var response = new ResponseBase<ProductWithAllDataDTO>(productDTO, "This is the product selected");
             return Ok(response);
         }
         [HttpPost]
