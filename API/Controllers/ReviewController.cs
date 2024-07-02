@@ -46,5 +46,13 @@ namespace API.Controllers
             await _review.CreateReview(newReview);
             return Ok("The review was created success");
         }
+        [HttpPut("{productId}/{userId}")]
+        public async Task<IActionResult> Update(int productId, int userId, ReviewDTO review)
+        {
+            var toUpdated = _mapper.Map<Review>(review);
+            await _review.UpdateReview(productId, userId, toUpdated);
+            return Ok("The review was update success");
+
+        }
     }
 }
