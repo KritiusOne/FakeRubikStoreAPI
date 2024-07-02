@@ -15,10 +15,18 @@ namespace Infraestructure.Repositories
         public IEnumerable<Product> GetAllWithTables()
         {
             return _context.Products
-                .Include(p => p.OrderProducts)
                 .Include(p => p.ProductCategories)
                 .Include(p => p.Reviews)
                 .ToList();
+        }
+
+        public Product GetByIdWithTables(int id)
+        {
+            var product = _context.Products
+                .Include(p => p.ProductCategories)
+                .Include(p => p.Reviews)
+                .FirstOrDefault(prod => prod.Id == id);
+            return product;
         }
     }
 }
