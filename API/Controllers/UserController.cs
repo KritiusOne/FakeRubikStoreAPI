@@ -20,13 +20,6 @@ namespace API.Controllers
             _mapper = mapper;
             _userService = userService;
         }
-        [HttpPost]
-        public async Task<IActionResult> CreateUser(UserDTO userDTO)
-        {
-            var newUser = _mapper.Map<User>(userDTO);
-            await _userService.CreateUser(newUser);
-            return Ok();
-        }
         [HttpGet]
         public IActionResult GetAllUser()
         {
@@ -46,6 +39,12 @@ namespace API.Controllers
                 200,
                 metaData);
             return Ok(response);
+        }
+        [HttpDelete("id")]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            await _userService.DeleteUser(id);
+            return Ok($"Deleted user " + id);
         }
     }
 }
