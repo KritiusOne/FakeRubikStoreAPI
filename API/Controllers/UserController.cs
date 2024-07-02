@@ -1,6 +1,6 @@
 ﻿using API.Response;
 using Aplication.CustomEntities;
-using Aplication.DTOs;
+using Aplication.DTOs.Users;
 using Aplication.Entities;
 using Aplication.Interfaces;
 using AutoMapper;

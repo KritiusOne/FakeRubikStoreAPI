@@ -1,5 +1,5 @@
 ﻿using API.Response;
-using Aplication.DTOs;
+using Aplication.DTOs.Users;
 using Aplication.Entities;
 using Aplication.Interfaces;
 using AutoMapper;
@@ -25,7 +25,7 @@ namespace API.Controllers.LogIn_SingIn
             this._userService = userService;            
         }
         [HttpPost]
-        public async Task<IActionResult> AddNewUser(UserDTO userDTO)
+        public async Task<IActionResult> AddNewUser(CreateUserDTO userDTO)
         {
             var user = _mapper.Map<User>(userDTO);
             var newUser = await _userService.NewUserRegister(user);
