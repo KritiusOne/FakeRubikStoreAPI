@@ -29,12 +29,11 @@ namespace API.Controllers.LogIn_SingIn
         {
             var user = _mapper.Map<User>(userDTO);
             var newUser = await _userService.NewUserRegister(user);
-            var newUserDTO = _mapper.Map<UserDTO>(newUser);
             var token = GenerateToken(newUser);
-            var response = new ResponseWithToken<UserDTO>(
-                "The register is succes",
-                newUserDTO,
-                $"Bearer "+token);
+            var response = new ResponseWithToken<string>(
+                "The register is succes. This is the JWT",
+                token,
+                "Bearer");
             return Ok(response);
         }
         private string GenerateToken(User user)
