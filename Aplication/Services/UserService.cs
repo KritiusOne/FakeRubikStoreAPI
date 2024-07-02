@@ -62,6 +62,9 @@ namespace Aplication.Services
             user.IdAddress = Address.Id;
             user.UserDirectionNav = Address;
 
+            //Second Rule, all user begins with role 2
+            user.IdRole = 2;
+
             user.Password = _passwordService.Hash(user.Password);
             var newUser = await _unitOfWork.UserRepository.AddAndReturnUser(user);
             return newUser;
