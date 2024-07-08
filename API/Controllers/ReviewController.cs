@@ -3,6 +3,7 @@ using Aplication.DTOs;
 using Aplication.Entities;
 using Aplication.Interfaces;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,6 +41,7 @@ namespace API.Controllers
             return Ok(response);
         }
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Post(ReviewDTO review)
         {
             var newReview = _mapper.Map<Review>(review);
@@ -47,6 +49,7 @@ namespace API.Controllers
             return Ok("The review was created success");
         }
         [HttpPut("{productId}/{userId}")]
+        [Authorize]
         public async Task<IActionResult> Update(int productId, int userId, ReviewDTO review)
         {
             var toUpdated = _mapper.Map<Review>(review);

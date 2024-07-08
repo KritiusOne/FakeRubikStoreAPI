@@ -5,6 +5,7 @@ using Aplication.Entities;
 using Aplication.Interfaces;
 using Aplication.QueryFilters;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 
@@ -73,6 +74,7 @@ namespace API.Controllers
             return Ok(response);
         }
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Post(ProductDTO productDTO)
         {
             var product = _mapper.Map<Product>(productDTO);
