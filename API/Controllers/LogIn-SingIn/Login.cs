@@ -49,6 +49,7 @@ namespace API.Controllers.LogIn_SingIn
             {
                 new Claim("Id", user.Id.ToString()),
                 new Claim("IdRole", user.IdRole.ToString()),
+                new Claim("IdAddress", user.IdAddress.ToString()),
                 new Claim("First_Name", user.Name),
                 new Claim("Last_Name", user.SecondName),
                 new Claim("email", user.Email),
