@@ -15,5 +15,10 @@ namespace Aplication.Services
             string baseUrl = $"{action}";
             return new Uri(baseUrl);
         }
+        public Uri GetPaginationOrder(OrderQueryFilters Filters, string action)
+        {
+            string baseUrl = $"{action}";
+            return new Uri(baseUrl);
+        }
     }
 }
