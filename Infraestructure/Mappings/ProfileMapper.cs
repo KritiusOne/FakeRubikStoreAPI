@@ -1,4 +1,5 @@
 ﻿using Aplication.DTOs;
+using Aplication.DTOs.Orders;
 using Aplication.DTOs.Products;
 using Aplication.DTOs.Users;
 using Aplication.Entities;
@@ -25,6 +26,14 @@ namespace Infraestructure.Mappings
 
             CreateMap<Review, ReviewDTO>()
                 .ReverseMap();
+
+            CreateMap<Order, OrderBasicDTO>().ReverseMap();
+            CreateMap<OrdersProducts, OrdersProductDTO>().ReverseMap();
+            CreateMap<CreateOrderDTO, Order>().ReverseMap();
+            CreateMap<Delivery, DeliveryBasicInfoDTO>().ReverseMap();
+            CreateMap<OrdersProducts, OrderProductCompleteInfoDTO>()
+                .ReverseMap();
+            CreateMap<Order, OrderCompleteInfoDTO>().ReverseMap();
         }
     }
 }
