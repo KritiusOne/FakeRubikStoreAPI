@@ -19,6 +19,9 @@ namespace Infraestructure.Repositories
         public IRepository<State> StateRepo => new BaseRepository<State>(_context);
         public IRepository<T> BaseRepo => new BaseRepository<T>(_context);
 
+        public IOrderRepository OrderRepo => new OrderRepository(_context);
+
+        public IDeliveryRepository DeliveryRepo => new DeliveryRepository(_context);
 
         public void Dispose()
         {

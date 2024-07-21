@@ -8,6 +8,8 @@ namespace Aplication.Interfaces
         IUserDirectionRepoitory AddressRepo { get; }
         IProductRepository ProductRepo { get; }
         IReviewRepository ReviewRepo { get; }
+        IOrderRepository OrderRepo { get; }
+        IDeliveryRepository DeliveryRepo { get; }
         IRepository<T> BaseRepo { get;  }
         void SaveChanges();
         Task SaveChangesAsync();
