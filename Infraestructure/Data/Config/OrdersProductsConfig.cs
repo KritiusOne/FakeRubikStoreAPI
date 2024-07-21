@@ -23,7 +23,7 @@ namespace Infraestructure.Data.Config
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Productos_Ordenes_Ordenes");
 
-            entity.HasOne(d => d.ProductNav).WithMany(p => p.OrderProducts)
+            entity.HasOne(d => d.ProductInfo).WithMany(p => p.OrderProducts)
                 .HasForeignKey(d => d.IdProduct)
                 .HasConstraintName("FK_Productos_Ordenes_Productos");
         }

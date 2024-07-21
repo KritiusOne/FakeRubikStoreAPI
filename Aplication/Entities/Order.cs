@@ -10,9 +10,9 @@ public partial class Order : BaseEntity
 
     public double FinalPrice { get; set; }
 
-    public virtual Delivery DeliveryNav { get; set; } = null!;
+    public virtual Delivery DeliveryInfo { get; set; } = null!;
 
-    public virtual User UserNav { get; set; } = null!;
+    public virtual User UserInfo { get; set; } = null!;
 
     public virtual ICollection<OrdersProducts> OrderProducts { get; } = new List<OrdersProducts>();
 }
