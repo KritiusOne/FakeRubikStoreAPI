@@ -14,15 +14,20 @@ namespace Infraestructure.Data.Config
             entity.Property(e => e.FinalPrice).HasColumnName("PrecioFinal");
             entity.Property(e => e.IdDelivery).HasColumnName("IdEnvio");
 
-            entity.HasOne(d => d.DeliveryNav).WithMany(p => p.Orders)
+            entity.HasOne(d => d.DeliveryInfo).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.IdDelivery)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Ordenes_Envios");
 
-            entity.HasOne(d => d.UserNav).WithMany(p => p.Orders)
+            entity.HasOne(d => d.UserInfo).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.IdUser)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Ordenes_Usuarios");
+
+            entity.HasMany(d => d.OrderProducts)
+                .WithOne(h => h.OrderNav)
+                .HasForeignKey(op => op.IdOrder)
+                .OnDelete(DeleteBehavior.Cascade);
             
         }
     }

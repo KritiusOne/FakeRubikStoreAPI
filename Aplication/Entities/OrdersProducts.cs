@@ -1,8 +1,8 @@
 ﻿namespace Aplication.Entities;
 
-public partial class OrdersProducts : BaseEntity
+public partial class OrdersProducts
 {
-    public int? IdProduct { get; set; }
+    public int IdProduct { get; set; }
 
     public int IdOrder { get; set; }
 
@@ -12,5 +12,5 @@ public partial class OrdersProducts : BaseEntity
 
     public virtual Order OrderNav { get; set; } = null!;
 
-    public virtual Product? ProductNav { get; set; }
+    public virtual Product ProductInfo { get; set; } = null!;
 }
