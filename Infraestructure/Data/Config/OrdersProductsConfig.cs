@@ -8,8 +8,6 @@ namespace Infraestructure.Data.Config
     {
         public void Configure(EntityTypeBuilder<OrdersProducts> entity)
         {
-            //Esto va a dar problemas
-            entity.HasKey(x => x.Id);
             entity.ToTable("Productos_Ordenes");
             entity.Property(e => e.IdProduct)
                 .HasColumnName("IdProducto");
