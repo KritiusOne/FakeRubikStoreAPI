@@ -48,6 +48,9 @@ builder.Services.AddTransient<IProductService, ProductService>();
 builder.Services.AddTransient<IProductRepository, ProductRepository>();
 builder.Services.AddTransient<IReviewServices, ReviewServices>();
 builder.Services.AddTransient<IReviewRepository, ReviewRepository>();
+builder.Services.AddTransient<IOrderRepository, OrderRepository>();
+builder.Services.AddTransient<IOrderService, OrderService>();
+builder.Services.AddTransient<IDeliveryRepository, DeliveryRepository>();
 
 builder.Services.AddSingleton<IUriService>(provider =>
 {
@@ -60,7 +63,7 @@ builder.Services.AddSingleton<IUriService>(provider =>
 
 builder.Services.AddDbContext<FakeRubikStoreContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("Prod")).LogTo(Console.WriteLine, LogLevel.Information);
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Dev")).LogTo(Console.WriteLine, LogLevel.Information);
 });
 
 builder.Services.AddAuthentication(opt =>
