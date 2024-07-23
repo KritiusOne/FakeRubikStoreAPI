@@ -40,6 +40,7 @@ namespace Infraestructure.Repositories
         {
             return await _context.Orders
                 .Include(h => h.UserInfo)
+                    .ThenInclude(h => h.AdressInfo)
                 .Include(h => h.OrderProducts)
                     .ThenInclude(x => x.ProductInfo)
                 .Include(h => h.DeliveryInfo)
