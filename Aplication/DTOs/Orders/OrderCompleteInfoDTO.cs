@@ -8,7 +8,7 @@ namespace Aplication.DTOs.Orders
 
         public DeliveryBasicInfoDTO DeliveryInfo { get; set; } = null!;
 
-        public UserDTO UserInfo { get; set; } = null!;
+        public UserWithAddressDTO UserInfo { get; set; } = null!;
 
         public ICollection<OrderProductCompleteInfoDTO> OrderProducts { get; } = new List<OrderProductCompleteInfoDTO>();
     }
