@@ -10,5 +10,7 @@
         public DateTime Date { get; set; }
 
         public double FinalPrice { get; set; }
+        public string NumberCard { get; set; } = null!;
+
     }
 }

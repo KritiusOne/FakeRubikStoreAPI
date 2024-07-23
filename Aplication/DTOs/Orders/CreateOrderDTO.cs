@@ -9,6 +9,8 @@ namespace Aplication.DTOs.Orders
         public DateTime Date { get; set; }
 
         public double FinalPrice { get; set; }
+        public string NumberCard { get; set; } = null!;
+
         public ICollection<OrdersProductDTO> OrderProducts { get; set; } = new List<OrdersProductDTO>();
     }
 }
