@@ -17,7 +17,7 @@ public partial class User : BaseEntity
 
     public virtual ICollection<Delivery> Deliveries { get; } = new List<Delivery>();
 
-    public virtual UserDirection UserDirectionNav { get; set; } = null!;
+    public virtual UserDirection AdressInfo { get; set; } = null!;
 
     public virtual Role RoleNav { get; set; } = null!;
 

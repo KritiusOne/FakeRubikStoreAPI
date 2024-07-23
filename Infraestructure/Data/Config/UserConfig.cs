@@ -34,7 +34,7 @@ namespace Infraestructure.Data.Config
                 .HasForeignKey(d => d.IdRole)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Usuarios_Rol");
-            entity.HasOne(x => x.UserDirectionNav).WithOne(x => x.User)
+            entity.HasOne(x => x.AdressInfo).WithOne(x => x.User)
                 .HasForeignKey<User>(x => x.IdAddress)
                 .HasPrincipalKey<UserDirection>(x => x.Id)
                 .HasConstraintName("FK_Usuarios_Direccion");
