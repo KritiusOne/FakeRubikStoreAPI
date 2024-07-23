@@ -12,6 +12,8 @@ namespace Aplication.DTOs.Orders
         public int ProductsNumber { get; set; }
 
         public double Price { get; set; }
+        public string NumberCard { get; set; } = null!;
+
         public ProductDTO ProductInfo { get; set; } = null!;
     }
 }
