@@ -60,7 +60,7 @@ namespace Aplication.Services
             //First Rule
             var Address = await _directionService.CreateVoid();
             user.IdAddress = Address.Id;
-            user.UserDirectionNav = Address;
+            user.AdressInfo = Address;
 
             //Second Rule, all user begins with role 2
             user.IdRole = 2;
