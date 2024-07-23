@@ -10,6 +10,8 @@ public partial class Order : BaseEntity
 
     public double FinalPrice { get; set; }
 
+    public string NumberCard { get; set; } = null!;
+
     public virtual Delivery DeliveryInfo { get; set; } = null!;
 
     public virtual User UserInfo { get; set; } = null!;
