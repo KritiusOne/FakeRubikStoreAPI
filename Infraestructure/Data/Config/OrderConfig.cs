@@ -13,6 +13,7 @@ namespace Infraestructure.Data.Config
             entity.Property(e => e.Date).HasColumnType("datetime").HasColumnName("Fecha");
             entity.Property(e => e.FinalPrice).HasColumnName("PrecioFinal");
             entity.Property(e => e.IdDelivery).HasColumnName("IdEnvio");
+            entity.Property(e => e.NumberCard).HasColumnName("numerotarjeta");
 
             entity.HasOne(d => d.DeliveryInfo).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.IdDelivery)
