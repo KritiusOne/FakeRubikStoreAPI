@@ -4,7 +4,10 @@ using Aplication.DTOs.Users;
 using Aplication.Entities;
 using Aplication.Interfaces;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace API.Controllers
 {
@@ -21,6 +24,7 @@ namespace API.Controllers
             _userService = userService;
         }
         [HttpGet]
+        [Authorize(Policy = "OnlyAdmins")]
         public IActionResult GetAllUser()
         {
             var users = _userService.GetAllUsers();
@@ -41,10 +45,12 @@ namespace API.Controllers
             return Ok(response);
         }
         [HttpDelete("id")]
+        [Authorize(Policy = "OnlyAdmins")]
         public async Task<IActionResult> DeleteUser(int id)
         {
             await _userService.DeleteUser(id);
             return Ok($"Deleted user " + id);
         }
     }
+ 
 }
