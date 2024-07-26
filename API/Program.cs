@@ -1,3 +1,4 @@
+using Aplication.Enums;
 using Aplication.Interfaces;
 using Aplication.Services;
 using Infraestructure.Data;
@@ -63,7 +64,7 @@ builder.Services.AddSingleton<IUriService>(provider =>
 
 builder.Services.AddDbContext<FakeRubikStoreContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("Prod")).LogTo(Console.WriteLine, LogLevel.Information);
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Dev")).LogTo(Console.WriteLine, LogLevel.Information);
 });
 
 builder.Services.AddAuthentication(opt =>
@@ -84,6 +85,10 @@ builder.Services.AddAuthentication(opt =>
     };
 });
 
+builder.Services.AddAuthorization(opt =>
+{
+    opt.AddPolicy("OnlyAdmins", policy => policy.RequireClaim("IdRole", ((int)RoleTypes.ADMIN).ToString()));
+});
 var app = builder.Build();
 
 app.UseSwagger();
