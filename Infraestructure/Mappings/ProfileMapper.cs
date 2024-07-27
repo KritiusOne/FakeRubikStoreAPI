@@ -15,6 +15,7 @@ namespace Infraestructure.Mappings
             CreateMap<User, CreateUserDTO>().ReverseMap();
             CreateMap<User, UserWithAddressDTO>().ReverseMap();
             CreateMap<UserDirection, AddressDTO>().ReverseMap();
+            CreateMap<UserDirection, AddressWithUserDTO>().ReverseMap();
 
             CreateMap<Role, RoleDTO>().ReverseMap();
             CreateMap<State, StateDTO>().ReverseMap();
