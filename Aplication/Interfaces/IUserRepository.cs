@@ -6,5 +6,6 @@ namespace Aplication.Interfaces
     {
         User GetUserByCredentials(string email);
         Task<User> AddAndReturnUser(User user);
+        User GetUserById(int id);
     }
 }
