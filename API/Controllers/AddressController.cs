@@ -1,5 +1,6 @@
 ﻿using API.Response;
 using Aplication.DTOs;
+using Aplication.Entities;
 using Aplication.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
@@ -24,6 +25,22 @@ namespace API.Controllers
             var AllAddress = _AddressService.GetAll();
             var AllAddressWithUsersDTO = _mapper.Map<IEnumerable<AddressWithUserDTO>>(AllAddress);
             var response = new ResponseBase<IEnumerable<AddressWithUserDTO>>(AllAddressWithUsersDTO, "This are all directions with users");
+            return Ok(response);
+        }
+        [HttpGet("id")]
+        public IActionResult GetById(int id)
+        {
+            var Address = _AddressService.GetById(id);
+            var AddressDTO = _mapper.Map<AddressWithUserDTO>(Address);
+            return Ok(AddressDTO);
+        }
+        [HttpPut("id")]
+        public async Task<IActionResult> Update(int id, AddressDTO dto)
+        {
+            var AddressToUpdate = _mapper.Map<UserDirection>(dto);
+            var directionResponse = await _AddressService.Update(id, AddressToUpdate);
+            var directionResponseDTO = _mapper.Map<AddressWithUserDTO>(directionResponse);
+            var response = new ResponseBase<AddressWithUserDTO>(directionResponseDTO, "the direction update was success");
             return Ok(response);
         }
     }
