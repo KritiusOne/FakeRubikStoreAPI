@@ -51,6 +51,16 @@ namespace API.Controllers
             await _userService.DeleteUser(id);
             return Ok($"Deleted user " + id);
         }
+        [HttpPut("id")]
+        [Authorize]
+        public async Task<IActionResult> Update(CreateUserDTO dto, int id)
+        {
+            var toUpdated = _mapper.Map<User>(dto);
+            User UserUpdated = await _userService.UpdateUser(toUpdated, id);
+            var fromResponse = _mapper.Map<CreateUserDTO>(UserUpdated);
+            var response = new ResponseBase<CreateUserDTO>(fromResponse, "This is the user Updated");
+            return Ok(response);
+        }
     }
  
 }
