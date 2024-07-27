@@ -6,5 +6,7 @@ namespace Aplication.Interfaces
     {
         UserDirection AddVoid(UserDirection userDirection);
         IEnumerable<UserDirection> GetAllWithUser();
+        UserDirection GetByIdWithUserInfo(int id);
+
     }
 }
