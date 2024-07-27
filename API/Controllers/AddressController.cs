@@ -3,6 +3,7 @@ using Aplication.DTOs;
 using Aplication.Entities;
 using Aplication.Interfaces;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,6 +21,7 @@ namespace API.Controllers
             this._AddressService = address;
         }
         [HttpGet]
+        [Authorize(Policy = "OnlyAdmins")]
         public IActionResult GetAll()
         {
             var AllAddress = _AddressService.GetAll();
@@ -28,6 +30,7 @@ namespace API.Controllers
             return Ok(response);
         }
         [HttpGet("id")]
+        [Authorize]
         public IActionResult GetById(int id)
         {
             var Address = _AddressService.GetById(id);
@@ -35,6 +38,7 @@ namespace API.Controllers
             return Ok(AddressDTO);
         }
         [HttpPut("id")]
+        [Authorize]
         public async Task<IActionResult> Update(int id, AddressDTO dto)
         {
             var AddressToUpdate = _mapper.Map<UserDirection>(dto);
