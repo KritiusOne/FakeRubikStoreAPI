@@ -19,6 +19,13 @@ namespace Infraestructure.Repositories
                 .Include(e => e.User)
                 .ToList();
         }
-        
+
+        public UserDirection GetByIdWithUserInfo(int id)
+        {
+            return _context.Directions
+                .Where(e => e.Id == id)
+                .Include(e => e.User)
+                .FirstOrDefault();
+        }
     }
 }
