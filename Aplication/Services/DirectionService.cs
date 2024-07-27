@@ -20,7 +20,8 @@ namespace Aplication.Services
 
         public IEnumerable<UserDirection> GetAll()
         {
-            throw new NotImplementedException();
+            var AllAddress = _unitOfWork.AddressRepo.GetAllWithUser();
+            return AllAddress;
         }
     }
 }
