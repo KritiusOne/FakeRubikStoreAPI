@@ -4,7 +4,10 @@ using Aplication.DTOs.Users;
 using Aplication.Entities;
 using Aplication.Interfaces;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace API.Controllers
 {
@@ -21,6 +24,7 @@ namespace API.Controllers
             _userService = userService;
         }
         [HttpGet]
+        [Authorize(Policy = "OnlyAdmins")]
         public IActionResult GetAllUser()
         {
             var users = _userService.GetAllUsers();
@@ -41,10 +45,22 @@ namespace API.Controllers
             return Ok(response);
         }
         [HttpDelete("id")]
+        [Authorize(Policy = "OnlyAdmins")]
         public async Task<IActionResult> DeleteUser(int id)
         {
             await _userService.DeleteUser(id);
             return Ok($"Deleted user " + id);
         }
+        [HttpPut("id")]
+        [Authorize]
+        public async Task<IActionResult> Update(CreateUserDTO dto, int id)
+        {
+            var toUpdated = _mapper.Map<User>(dto);
+            User UserUpdated = await _userService.UpdateUser(toUpdated, id);
+            var fromResponse = _mapper.Map<CreateUserDTO>(UserUpdated);
+            var response = new ResponseBase<CreateUserDTO>(fromResponse, "This is the user Updated");
+            return Ok(response);
+        }
     }
+ 
 }
