@@ -22,5 +22,10 @@ namespace Infraestructure.Repositories
             var newEntity = _entities.FirstOrDefault(e => e.Email == user.Email);
             return newEntity;
         }
+        public User GetUserById(int id)
+        {
+            var user = _context.Users.Where(users => users.Id == id).FirstOrDefault();
+            return user;
+        }
     }
 }

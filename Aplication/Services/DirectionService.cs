@@ -1,4 +1,5 @@
 ﻿using Aplication.Entities;
+using Aplication.Exceptions;
 using Aplication.Interfaces;
 
 namespace Aplication.Services
@@ -20,7 +21,30 @@ namespace Aplication.Services
 
         public IEnumerable<UserDirection> GetAll()
         {
-            throw new NotImplementedException();
+            var AllAddress = _unitOfWork.AddressRepo.GetAllWithUser();
+            return AllAddress;
+        }
+        public UserDirection GetById(int id)
+        {
+            var searched = _unitOfWork.AddressRepo.GetByIdWithUserInfo(id);
+            return searched;
+        }
+
+        public async Task<UserDirection> Update(int id, UserDirection userDirection)
+        {
+            var directionSearched = _unitOfWork.AddressRepo.GetByIdWithUserInfo(id);
+            if (directionSearched == null)
+            {
+                throw new BaseException("Not found");
+            }
+            directionSearched.Address = userDirection.Address;
+            directionSearched.City = userDirection.City;
+            directionSearched.State = userDirection.State;
+            directionSearched.Country = userDirection.Country;
+            directionSearched.Description = userDirection.Description;
+
+            await _unitOfWork.SaveChangesAsync();
+            return directionSearched;
         }
     }
 }

@@ -6,5 +6,7 @@ namespace Aplication.Interfaces
     {
         Task<UserDirection> CreateVoid();
         IEnumerable<UserDirection> GetAll();
+        UserDirection GetById(int id);
+        Task<UserDirection> Update(int id, UserDirection userDirection);
     }
 }
