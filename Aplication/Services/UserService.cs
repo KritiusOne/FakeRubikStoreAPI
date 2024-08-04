@@ -3,6 +3,8 @@ using Aplication.Entities;
 using Aplication.Exceptions;
 using Aplication.Interfaces;
 using Aplication.Options;
+using System.Linq.Expressions;
+using System.Text.Unicode;
 
 namespace Aplication.Services
 {
@@ -75,5 +77,28 @@ namespace Aplication.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
+        public async Task<User> UpdateUser(User toUpdated, int id)
+        {
+            var user = _unitOfWork.UserRepository.GetUserById(id);
+            if(user == null)
+            {
+                throw new BaseException("Update error, user not fount");
+            }
+            user.Name = toUpdated.Name;
+            user.SecondName = toUpdated.SecondName;
+            user.Email = toUpdated.Email;
+            if(toUpdated.Password != "" && toUpdated.Password != null)
+            {
+                bool check = _passwordService.Check(user.Password, toUpdated.Password);
+                if (!check)
+                {
+                    user.Password = _passwordService.Hash(toUpdated.Password);
+                }
+            }
+            user.Phone = toUpdated.Phone;
+            _unitOfWork.UserRepository.Update(id, user);
+            await _unitOfWork.SaveChangesAsync();
+            return user;
+        }
     }
 }

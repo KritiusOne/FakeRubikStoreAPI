@@ -1,3 +1,4 @@
+using Aplication.Enums;
 using Aplication.Interfaces;
 using Aplication.Services;
 using Infraestructure.Data;
@@ -84,6 +85,10 @@ builder.Services.AddAuthentication(opt =>
     };
 });
 
+builder.Services.AddAuthorization(opt =>
+{
+    opt.AddPolicy("OnlyAdmins", policy => policy.RequireClaim("IdRole", ((int)RoleTypes.ADMIN).ToString()));
+});
 var app = builder.Build();
 
 app.UseSwagger();

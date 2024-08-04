@@ -8,6 +8,7 @@ namespace Aplication.Interfaces
         PagedList<User> GetAllUsers();
         User GetUserByCredentials(string email, string password);
         Task<User> NewUserRegister(User user);
+        Task<User> UpdateUser(User toUpdated, int id);
         Task DeleteUser(int id);
     }
 }
