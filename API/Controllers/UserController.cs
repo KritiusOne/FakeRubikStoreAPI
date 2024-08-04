@@ -1,4 +1,5 @@
-﻿using API.Response;
+﻿using API.CustomClass;
+using API.Response;
 using Aplication.CustomEntities;
 using Aplication.DTOs.Users;
 using Aplication.Entities;
@@ -17,11 +18,12 @@ namespace API.Controllers
     {
         private readonly IUserService<User> _userService;
         private readonly IMapper _mapper;
-
-        public UserController(IUserService<User> userService, IMapper mapper)
+        private readonly IConfiguration _config;
+        public UserController(IUserService<User> userService, IMapper mapper, IConfiguration config)
         {
             _mapper = mapper;
             _userService = userService;
+            _config = config;
         }
         [HttpGet]
         [Authorize(Policy = "OnlyAdmins")]
@@ -57,8 +59,12 @@ namespace API.Controllers
         {
             var toUpdated = _mapper.Map<User>(dto);
             User UserUpdated = await _userService.UpdateUser(toUpdated, id);
-            var fromResponse = _mapper.Map<CreateUserDTO>(UserUpdated);
-            var response = new ResponseBase<CreateUserDTO>(fromResponse, "This is the user Updated");
+            JwtUtilsFunction jwt = new JwtUtilsFunction(_config);
+            string token = jwt.GenerateToken(UserUpdated);
+            var response = new ResponseWithToken<string>(
+                "The user was updated success",
+                token,
+                "Bearer");
             return Ok(response);
         }
     }
