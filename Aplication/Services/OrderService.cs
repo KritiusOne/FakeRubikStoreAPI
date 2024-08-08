@@ -16,6 +16,7 @@ namespace Aplication.Services
 
         public PagedList<Order> GetAll(OrderQueryFilters filters)
         {
+            Console.WriteLine(filters.ToString());
             var response = _unitOfWork.OrderRepo.GetAll();
             if(filters.MinPrice != null)
             {
@@ -39,8 +40,17 @@ namespace Aplication.Services
                 var MaxDate = (DateTime)filters.MaxDate;
                 response = response.Where(e => DateTime.Compare(e.Date, MaxDate) == -1);
             }
+            if(filters.IdUser != null)
+            {
+                response = response.Where(e => e.IdUser == filters.IdUser);
+            }
             var AllOrders = PagedList<Order>.CreatedPagedList(response, filters.PageNumber, filters.PageSize);
             return AllOrders;
+        }
+        public async Task<Order> GetById(int id)
+        {
+            var Searched = await _unitOfWork.OrderRepo.GetByIdWithTables(id);
+            return Searched;
         }
         public async Task<Order> CreateOrder(Order order)
         {
@@ -71,10 +81,5 @@ namespace Aplication.Services
             return order;
         }
 
-        public async Task<Order> GetById(int id)
-        {
-            var Searched = await _unitOfWork.OrderRepo.GetByIdWithTables(id);
-            return Searched;
-        }
     }
 }
