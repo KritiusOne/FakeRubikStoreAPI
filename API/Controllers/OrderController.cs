@@ -32,7 +32,7 @@ namespace API.Controllers
             var pagePrev = filters.PageNumber != 1 ? filters.PageNumber - 1 : 1;
             var pageNext = filters.PageNumber + 1;
             var AllOrders = _service.GetAll(filters);
-            var AllOrdersDTO = _map.Map<IEnumerable<OrderBasicDTO>>(AllOrders);
+            var AllOrdersDTO = _map.Map<IEnumerable<OrderCompleteInfoDTO>>(AllOrders);
             Dictionary<string, string> queryParams = new Dictionary<string, string>
             {
                 {"Date", filters.Date?.ToShortDateString()},
@@ -60,7 +60,7 @@ namespace API.Controllers
                 NextPageURL = _uriService.GetPaginationOrder(filters, nextParamsURL).ToString(),
                 PreviousPageURL = _uriService.GetPaginationOrder(filters, previousParamsURL).ToString()
             };
-            var response = new ResponsePagination<IEnumerable<OrderBasicDTO>>(AllOrdersDTO,
+            var response = new ResponsePagination<IEnumerable<OrderCompleteInfoDTO>>(AllOrdersDTO,
                 "this all Orders filtered",
                 200, metaData);
             return Ok(response);
