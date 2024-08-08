@@ -8,8 +8,8 @@ namespace Aplication.DTOs.Orders
 
         public DeliveryBasicInfoDTO DeliveryInfo { get; set; } = null!;
 
-        public UserWithAddressDTO UserInfo { get; set; } = null!;
+        public UserMinimalDTO UserInfo { get; set; } = null!;
 
-        public ICollection<OrderProductCompleteInfoDTO> OrderProducts { get; } = new List<OrderProductCompleteInfoDTO>();
+        public ICollection<OrderProductCompleteInfoDTO> OrderProducts { get; set; } = new List<OrderProductCompleteInfoDTO>();
     }
 }
