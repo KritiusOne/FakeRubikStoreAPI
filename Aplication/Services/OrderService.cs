@@ -17,7 +17,7 @@ namespace Aplication.Services
         public PagedList<Order> GetAll(OrderQueryFilters filters)
         {
             Console.WriteLine(filters.ToString());
-            var response = _unitOfWork.OrderRepo.GetAll();
+            var response = _unitOfWork.OrderRepo.GetAllWithTables();
             if(filters.MinPrice != null)
             {
                 response = response.Where(e => e.FinalPrice >= filters.MinPrice);
