@@ -32,6 +32,7 @@ namespace API.Controllers
             var pagePrev = filters.PageNumber != 1 ? filters.PageNumber - 1 : 1;
             var pageNext = filters.PageNumber + 1;
             var AllOrders = _service.GetAll(filters);
+
             var AllOrdersDTO = _map.Map<IEnumerable<OrderCompleteInfoDTO>>(AllOrders);
             Dictionary<string, string> queryParams = new Dictionary<string, string>
             {

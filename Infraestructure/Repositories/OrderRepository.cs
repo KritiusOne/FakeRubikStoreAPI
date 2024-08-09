@@ -28,6 +28,7 @@ namespace Infraestructure.Repositories
                 .Include(e => e.UserInfo)
                 .Include(e => e.DeliveryInfo)
                 .Include(e => e.OrderProducts)
+                    .ThenInclude(x => x.ProductInfo)
                 .ToList();
         }
 
