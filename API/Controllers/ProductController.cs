@@ -74,7 +74,7 @@ namespace API.Controllers
             return Ok(response);
         }
         [HttpPost]
-        [Authorize]
+        [Authorize(Policy = "OnlyAdmins")]
         public async Task<IActionResult> Post(ProductDTO productDTO)
         {
             var product = _mapper.Map<Product>(productDTO);
