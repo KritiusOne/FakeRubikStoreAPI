@@ -11,6 +11,9 @@ namespace Aplication.Interfaces
         IOrderRepository OrderRepo { get; }
         IDeliveryRepository DeliveryRepo { get; }
         IRepository<T> BaseRepo { get;  }
+        Task BeginTransactionAsync();
+        void CommitTransaction();
+        void RollbackTransaction();
         void SaveChanges();
         Task SaveChangesAsync();
     }
