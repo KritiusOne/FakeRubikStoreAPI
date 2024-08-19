@@ -38,5 +38,9 @@ namespace Infraestructure.Repositories
             var forDelete = await _entities.FindAsync(id);
             _entities.Remove(forDelete);
         }
+        public void Attach(T entity)
+        {
+            _entities.Attach(entity);
+        }
     }
 }

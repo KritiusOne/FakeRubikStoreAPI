@@ -9,5 +9,6 @@ namespace Aplication.Interfaces
         Task Add(T element);
         void Update(int id, T element);
         Task Delete(int id);
+        void Attach(T entity);
     }
 }
