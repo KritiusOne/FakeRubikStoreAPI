@@ -1,5 +1,6 @@
 ﻿using Aplication.CustomEntities;
 using Aplication.Entities;
+using Aplication.Exceptions;
 using Aplication.Interfaces;
 using Aplication.QueryFilters;
 
@@ -54,31 +55,54 @@ namespace Aplication.Services
         }
         public async Task<Order> CreateOrder(Order order)
         {
-            var newCode = Guid.NewGuid();
-            var Envio = new Delivery()
+            try
             {
-                IdState = 2,
-                IdUser = order.IdUser,
-                Code = newCode.ToString()
-            };
-            Envio = await _unitOfWork.DeliveryRepo.CreateAndReturn(Envio);
-            order.IdDelivery = Envio.Id;
-            await _unitOfWork.OrderRepo.AddAndReturn(order);
-            var arrProducts = order.OrderProducts.ToList();
-            for(int i = 0; i< arrProducts.Count; i++)
-            {
-                arrProducts[i].IdOrder = order.Id;
-                var OrderProductComprobation = await _unitOfWork.OrderRepo.GetByIdOrderProdut(arrProducts[i].IdProduct, arrProducts[i].IdOrder);
-                if (OrderProductComprobation == null)
+                await _unitOfWork.BeginTransactionAsync();
+                var filtered = order.OrderProducts
+                    .GroupBy(op => op.IdProduct)
+                    .Select(group => group.First())
+                    .ToList();
+                var newCode = Guid.NewGuid();
+                var Envio = new Delivery()
                 {
-                    await _unitOfWork.OrderRepo.AddNewOrderProduct(arrProducts[i]);
+                    IdState = 2,
+                    IdUser = order.IdUser,
+                    Code = newCode.ToString()
+                };
+                Envio = await _unitOfWork.DeliveryRepo.CreateAndReturn(Envio);
+                order.IdDelivery = Envio.Id;
+
+                order = await _unitOfWork.OrderRepo.AddAndReturn(order);
+
+                foreach(var op in filtered)
+                {
+                    var ProductForEdit = await _unitOfWork.ProductRepo.GetById(op.IdProduct);
+                    if(ProductForEdit == null)
+                    {
+                        throw new BaseException($"NO estoy encontrando el producto ${op.IdProduct}");
+                    }
+                    else
+                    {
+                        ProductForEdit.Stock -= op.ProductsNumber;
+                        _unitOfWork.ProductRepo.Attach(ProductForEdit);
+                        _unitOfWork.ProductRepo.Update(ProductForEdit.Id, ProductForEdit);
+                    }
+
+                    if(filtered.IndexOf(op) % 3 == 0)
+                    {
+                        await _unitOfWork.SaveChangesAsync();
+                    }
                 }
-                
-                if (i % 3 == 0)
-                    await _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.SaveChangesAsync();
+                _unitOfWork.CommitTransaction();
+                return order;
             }
-            await _unitOfWork.SaveChangesAsync();
-            return order;
+            catch(Exception ex)
+            {
+                _unitOfWork.RollbackTransaction();
+                throw new Exception("Exception al momento de realizar las operaciones", ex);
+            }
+            
         }
 
     }
