@@ -1,5 +1,6 @@
 ﻿using Aplication.CustomEntities;
 using Aplication.Entities;
+using Aplication.Enums;
 using Aplication.Exceptions;
 using Aplication.Interfaces;
 using Aplication.QueryFilters;
@@ -65,7 +66,7 @@ namespace Aplication.Services
                 var newCode = Guid.NewGuid();
                 var Envio = new Delivery()
                 {
-                    IdState = 2,
+                    IdState = (int)StatesTypes.NO_ADMITIDO,
                     IdUser = order.IdUser,
                     Code = newCode.ToString()
                 };
