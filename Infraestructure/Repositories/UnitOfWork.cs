@@ -26,6 +26,8 @@ namespace Infraestructure.Repositories
 
         public IDeliveryRepository DeliveryRepo => new DeliveryRepository(_context);
 
+        public ICategoryRepository CategoryRepo => new CategoryRepository(_context);
+
         public async Task BeginTransactionAsync()
         {
             var dbCtxTransaction = await _context.Database.BeginTransactionAsync();

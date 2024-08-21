@@ -10,6 +10,7 @@ namespace Aplication.Interfaces
         IReviewRepository ReviewRepo { get; }
         IOrderRepository OrderRepo { get; }
         IDeliveryRepository DeliveryRepo { get; }
+        ICategoryRepository CategoryRepo { get; }
         IRepository<T> BaseRepo { get;  }
         Task BeginTransactionAsync();
         void CommitTransaction();
