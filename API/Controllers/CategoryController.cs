@@ -36,5 +36,12 @@ namespace API.Controllers
             await _service.CreateCategory(newCategory);
             return Ok();
         }
+        [HttpPost("/addPC")]
+        public async Task<IActionResult> NewCategoryToProducts(CategoryManyProductsDTO dto)
+        {
+            var newsCategoriesProducts = _mapper.Map<ICollection<ProductCategory>>(dto.categoryProductDTOs);
+            await _service.CreateManyProductsCategories(newsCategoriesProducts);
+            return Ok("Se realizo correctamente");
+        }
     }
 }
