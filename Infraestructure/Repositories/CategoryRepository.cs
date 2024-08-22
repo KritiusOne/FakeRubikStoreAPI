@@ -11,6 +11,15 @@ namespace Infraestructure.Repositories
             
         }
 
+        public bool ExistAllCategories(List<int> Ids)
+        {
+            return _context.Categories
+                .Where(ctg => Ids.Contains(ctg.Id))
+                .Select(ctg => ctg.Id)
+                .Distinct()
+                .Count() == Ids.Count;
+        }
+
         public bool ExistAllProducts(List<int> Ids)
         {
             return _context.Products
@@ -18,7 +27,11 @@ namespace Infraestructure.Repositories
                 .Select(prod => prod.Id)
                 .Distinct()
                 .Count() == Ids.Count;
+        }
 
+        public async Task CreateProductCategory(ProductCategory entity)
+        {
+            await _context.AddAsync(entity);
         }
     }
 }
