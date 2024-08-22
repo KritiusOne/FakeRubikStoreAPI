@@ -10,5 +10,15 @@ namespace Infraestructure.Repositories
         {
             
         }
+
+        public bool ExistAllProducts(List<int> Ids)
+        {
+            return _context.Products
+                .Where(prod => Ids.Contains(prod.Id))
+                .Select(prod => prod.Id)
+                .Distinct()
+                .Count() == Ids.Count;
+
+        }
     }
 }
