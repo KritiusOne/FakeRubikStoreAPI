@@ -26,7 +26,9 @@ namespace Infraestructure.Mappings
             CreateMap<Product, ProductBasicInfoDTO>().ReverseMap();
             CreateMap<Product, ProductWithAllDataDTO>().ReverseMap();
 
+            CreateMap<ProductCategory, CategoryProductDTO>().ReverseMap();
             CreateMap<ProductCategory, ProductCategoryDTO>().ReverseMap();
+            CreateMap<Category, CreateCategoryDTO>().ReverseMap();
 
             CreateMap<Review, ReviewDTO>()
                 .ReverseMap();
