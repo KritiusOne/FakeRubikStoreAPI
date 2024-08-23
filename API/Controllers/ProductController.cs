@@ -75,7 +75,7 @@ namespace API.Controllers
         }
         [HttpPost]
         [Authorize(Policy = "OnlyAdmins")]
-        public async Task<IActionResult> Post(ProductDTO productDTO)
+        public async Task<IActionResult> Post(CreateProductDTO productDTO)
         {
             var product = _mapper.Map<Product>(productDTO);
             await _productService.AddProduct(product);
