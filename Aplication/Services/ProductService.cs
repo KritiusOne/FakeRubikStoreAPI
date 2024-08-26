@@ -1,5 +1,6 @@
 ﻿using Aplication.CustomEntities;
 using Aplication.Entities;
+using Aplication.Enums;
 using Aplication.Exceptions;
 using Aplication.Interfaces;
 using Aplication.QueryFilters;
@@ -52,15 +53,17 @@ namespace Aplication.Services
                 actualProductInfo.Stock = ProductInfo.Stock;
 
                 var blobServices = new BlobServices();
-                var nameThumbnail = await blobServices.UploadBlobAsync(thumbnailImg, Enums.AzureBlobTypes.Products, blobKey);
-                if(nameThumbnail != null)
+                var urlThumbnail = await blobServices.UploadBlobAsync(thumbnailImg, Enums.AzureBlobTypes.Products, blobKey);
+                if(urlThumbnail != null)
                 {
-                    actualProductInfo.Thumbnail = nameThumbnail;
+                    await blobServices.DeleteAsync(AzureBlobTypes.Products,actualProductInfo.Thumbnail, blobKey);
+                    actualProductInfo.Thumbnail = urlThumbnail;
                 }
-                var nameProductImg = await blobServices.UploadBlobAsync(thumbnailImg, Enums.AzureBlobTypes.Products, blobKey);
-                if(nameProductImg != null)
+                var urlProductImg = await blobServices.UploadBlobAsync(productImg, Enums.AzureBlobTypes.Products, blobKey);
+                if(urlProductImg != null)
                 {
-                    actualProductInfo.Image = nameProductImg;
+                    await blobServices.DeleteAsync(AzureBlobTypes.Products, actualProductInfo.Image, blobKey);
+                    actualProductInfo.Image = urlProductImg;
                 }
 
                 foreach(var tag in ProductInfo.ProductCategories)
