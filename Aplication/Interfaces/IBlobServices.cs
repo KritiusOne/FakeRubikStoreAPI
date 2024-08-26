@@ -7,5 +7,6 @@ namespace Aplication.Interfaces
     {
         BlobContainerClient GetContainer(string containerName, string key);
         Task<string> UploadBlobAsync(Stream file, AzureBlobTypes BlobTypes, string key);
+        Task DeleteAsync(AzureBlobTypes container, string blobFilename, string key);
     }
 }
