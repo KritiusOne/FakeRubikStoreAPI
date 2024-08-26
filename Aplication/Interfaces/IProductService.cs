@@ -9,5 +9,6 @@ namespace Aplication.Interfaces
         PagedList<Product> GetAllProducts(ProductQueryFilter filters);
         Task AddProduct(Product product);
         Product GetById(int id);
+        Task UpdateProduct(Stream thumbnailImg, Stream productImg, Product ProductInfo, string blobKey, int id);
     }
 }
