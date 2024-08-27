@@ -78,10 +78,16 @@ namespace API.Controllers
         }
         [HttpPost]
         [Authorize(Policy = "OnlyAdmins")]
-        public async Task<IActionResult> Post(CreateProductDTO productDTO)
+        public async Task<IActionResult> Post([FromForm] CreateProductWithImgDTO AllInfoProduct)
         {
-            var product = _mapper.Map<Product>(productDTO);
-            await _productService.AddProduct(product);
+            var product = _mapper.Map<Product>(AllInfoProduct.InfoProduct);
+            using(Stream thumbnail = AllInfoProduct.ThumbnailImage.OpenReadStream())
+            {
+                using(Stream productImg = AllInfoProduct.ProductImage.OpenReadStream())
+                {
+                    await _productService.AddProduct(product, thumbnail, productImg, _config["BlobStorage:ConnectionString"]);
+                }
+            }
             return Ok();
         }
         [HttpPut("update")]
