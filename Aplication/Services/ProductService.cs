@@ -22,14 +22,25 @@ namespace Aplication.Services
             return paginationProducts;
         }
 
-        public async Task AddProduct(Product product)
+        public async Task AddProduct(Product product, Stream ThumbnailImg, Stream ProductImg, string key)
         {
             if(product == null)
             {
                 throw new BaseException("Bad request, Product is null");
             }
-            await _unitOfWork.ProductRepo.Add(product);
-            await _unitOfWork.SaveChangesAsync();
+            try
+            {
+                var blobService = new BlobServices();
+                string thumbnailName = await blobService.UploadBlobAsync(ThumbnailImg, AzureBlobTypes.Products, key);
+                product.Thumbnail = thumbnailName;
+                product.Image = await blobService.UploadBlobAsync(ProductImg, AzureBlobTypes.Products, key);
+                await _unitOfWork.ProductRepo.Add(product);
+                await _unitOfWork.SaveChangesAsync();
+            }
+            catch(Exception ex)
+            {
+                throw new Exception("Hubo un problema al momento de crear el registro", ex);
+            }
         }
         public Product GetById(int id)
         {
