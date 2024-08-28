@@ -1,6 +1,6 @@
 ﻿using Aplication.Entities;
 
-namespace Aplication.DTOs
+namespace Aplication.DTOs.Products
 {
     public class ProductCategoryDTO
     {

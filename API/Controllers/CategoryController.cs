@@ -1,5 +1,5 @@
 ﻿using API.Response;
-using Aplication.DTOs;
+using Aplication.DTOs.Products;
 using Aplication.Entities;
 using Aplication.Interfaces;
 using AutoMapper;
@@ -14,10 +14,12 @@ namespace API.Controllers
     {
         private readonly IBasicEndpointService<Category> _basicEndpoint;
         private readonly IMapper _mapper;
-        public CategoryController(IMapper mapper, IBasicEndpointService<Category> basicEndpointService)
+        private readonly ICategoryService _service;
+        public CategoryController(IMapper mapper, IBasicEndpointService<Category> basicEndpointService, ICategoryService service)
         {
             _mapper = mapper;
             _basicEndpoint = basicEndpointService;
+            _service = service;
         }
         [HttpGet]
         public IActionResult Get()
@@ -28,11 +30,18 @@ namespace API.Controllers
             return Ok(response);
         }
         [HttpPost]
-        public async Task<IActionResult> Post(CategoryDTO categoryDTO)
+        public async Task<IActionResult> Post(CreateCategoryDTO categoryDTO)
         {
             var newCategory = _mapper.Map<Category>(categoryDTO);
-            await _basicEndpoint.Create(newCategory);
+            await _service.CreateCategory(newCategory);
             return Ok();
+        }
+        [HttpPost("/addPC")]
+        public async Task<IActionResult> NewCategoryToProducts(CategoryManyProductsDTO dto)
+        {
+            var newsCategoriesProducts = _mapper.Map<ICollection<ProductCategory>>(dto.categoryProductDTOs);
+            await _service.CreateManyProductsCategories(newsCategoriesProducts);
+            return Ok("Se realizo correctamente");
         }
     }
 }

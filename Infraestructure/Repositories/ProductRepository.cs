@@ -24,6 +24,7 @@ namespace Infraestructure.Repositories
         {
             var product = _context.Products
                 .Include(p => p.ProductCategories)
+                    .ThenInclude(ctg => ctg.CategoryNav)
                 .Include(p => p.Reviews)
                 .FirstOrDefault(prod => prod.Id == id);
             return product;

@@ -1,12 +1,15 @@
 ﻿using Aplication.Entities;
 using Aplication.Interfaces;
 using Infraestructure.Data;
+using Microsoft.EntityFrameworkCore.Storage;
+using System.Data;
 
 namespace Infraestructure.Repositories
 {
     public class UnitOfWork<T> : IUnitOfWork<T> where T : class
     {
         private readonly FakeRubikStoreContext _context;
+        private IDbTransaction _transaction;
         public UnitOfWork(FakeRubikStoreContext contx)
         {
             _context = contx;
@@ -23,6 +26,23 @@ namespace Infraestructure.Repositories
 
         public IDeliveryRepository DeliveryRepo => new DeliveryRepository(_context);
 
+        public ICategoryRepository CategoryRepo => new CategoryRepository(_context);
+
+        public async Task BeginTransactionAsync()
+        {
+            var dbCtxTransaction = await _context.Database.BeginTransactionAsync();
+            _transaction = dbCtxTransaction.GetDbTransaction();
+        }
+
+        public void CommitTransaction()
+        {
+            _transaction.Commit();
+        }
+        public void RollbackTransaction()
+        {
+            _transaction.Rollback();
+        }
+
         public void Dispose()
         {
             if (_context != null)
@@ -30,6 +50,8 @@ namespace Infraestructure.Repositories
                 _context.Dispose();
             }
         }
+
+       
 
         public void SaveChanges()
         {

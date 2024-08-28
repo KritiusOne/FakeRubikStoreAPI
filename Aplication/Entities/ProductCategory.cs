@@ -1,5 +1,5 @@
 ﻿namespace Aplication.Entities;
-public partial class ProductCategory : BaseEntity
+public partial class ProductCategory
 {
 
     public int IdCategory { get; set; }
