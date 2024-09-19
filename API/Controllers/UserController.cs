@@ -4,6 +4,7 @@ using Aplication.CustomEntities;
 using Aplication.DTOs.Users;
 using Aplication.Entities;
 using Aplication.Interfaces;
+using Aplication.QueryFilters;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -27,9 +28,10 @@ namespace API.Controllers
         }
         [HttpGet]
         [Authorize(Policy = "OnlyAdmins")]
-        public IActionResult GetAllUser()
+        public IActionResult GetAllUser([FromQuery] UserQueryFilters filters)
         {
-            var users = _userService.GetAllUsers();
+
+            var users = _userService.GetAllUsers(filters);
             var usersDTO = _mapper.Map<IEnumerable<UserDTO>>(users);
             MetaData metaData = new MetaData()
             {
@@ -38,7 +40,9 @@ namespace API.Controllers
                 HasPreviousPage = users.hasPreviousPage,
                 PageSize = users.PageSize,
                 TotalCount = users.PageCount,
-                TotalPage = users.TotalPages
+                TotalPage = users.TotalPages,
+                NextPageURL = "",
+                PreviousPageURL = ""
             };
             var response = new ResponsePagination<IEnumerable<UserDTO>>(usersDTO,
                 "this is the all users",
