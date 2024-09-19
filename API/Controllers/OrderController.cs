@@ -27,6 +27,7 @@ namespace API.Controllers
             _uriService = uriService;
         }
         [HttpGet]
+        //[Authorize(Policy = "OnlyAdmins")]
         public IActionResult Get([FromQuery] OrderQueryFilters filters)
         {
             var pagePrev = filters.PageNumber != 1 ? filters.PageNumber - 1 : 1;
