@@ -3,6 +3,7 @@ using Aplication.Entities;
 using Aplication.Exceptions;
 using Aplication.Interfaces;
 using Aplication.Options;
+using Aplication.QueryFilters;
 using System.Linq.Expressions;
 using System.Text.Unicode;
 
@@ -21,10 +22,14 @@ namespace Aplication.Services
             this._directionService = directionService;
         }
 
-        public PagedList<User> GetAllUsers()
+        public PagedList<User> GetAllUsers(UserQueryFilters filters)
         {
             var AllUsers = _unitOfWork.UserRepository.GetAll();
-            var usersPagination = PagedList<User>.CreatedPagedList(AllUsers, 1, 10);
+            if(filters.IdRol != null)
+            {
+                AllUsers = AllUsers.Where(user => user.IdRole == filters.IdRol);
+            }
+            var usersPagination = PagedList<User>.CreatedPagedList(AllUsers, filters.PageNumber, filters.PageSize);
             return usersPagination;
         }
         public User GetUserByCredentials(string email, string password)
