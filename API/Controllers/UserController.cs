@@ -4,9 +4,11 @@ using Aplication.CustomEntities;
 using Aplication.DTOs.Users;
 using Aplication.Entities;
 using Aplication.Interfaces;
+using Aplication.QueryFilters;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
@@ -27,9 +29,25 @@ namespace API.Controllers
         }
         [HttpGet]
         [Authorize(Policy = "OnlyAdmins")]
-        public IActionResult GetAllUser()
+        public IActionResult GetAllUser([FromQuery] UserQueryFilters filters)
         {
-            var users = _userService.GetAllUsers();
+            int numberPrevious = filters.PageNumber - 1;
+            int numberNext = filters.PageNumber + 1;
+            var users = _userService.GetAllUsers(filters);
+            Dictionary<string, string> queryParams = new Dictionary<string, string>
+            {
+                { "IdRol", filters.IdRol.ToString() },
+                {"PageSize", filters.PageSize == 0 ? "1" : filters.PageSize.ToString() },
+                {"Email", filters.Email }
+            };
+            var previousQueryParams = queryParams;
+            previousQueryParams["PageNumber"] = users.hasPreviousPage == false ? "false" : numberPrevious.ToString();
+            var previousParamsURL = QueryHelpers.AddQueryString("https://apifakerubikstore.azurewebsites.net/api/User", previousQueryParams);
+
+            var nextQueryParams = queryParams;
+            nextQueryParams["PageNumber"] = users.hasNextPage == true ? numberNext.ToString() : "false";
+            var nextParamsURL = QueryHelpers.AddQueryString("https://apifakerubikstore.azurewebsites.net/api/User", nextQueryParams);
+
             var usersDTO = _mapper.Map<IEnumerable<UserDTO>>(users);
             MetaData metaData = new MetaData()
             {
@@ -38,8 +56,11 @@ namespace API.Controllers
                 HasPreviousPage = users.hasPreviousPage,
                 PageSize = users.PageSize,
                 TotalCount = users.PageCount,
-                TotalPage = users.TotalPages
+                TotalPage = users.TotalPages,
+                NextPageURL = nextParamsURL,
+                PreviousPageURL = previousParamsURL
             };
+             
             var response = new ResponsePagination<IEnumerable<UserDTO>>(usersDTO,
                 "this is the all users",
                 200,
