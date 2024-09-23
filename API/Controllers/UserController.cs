@@ -8,6 +8,7 @@ using Aplication.QueryFilters;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
@@ -27,11 +28,25 @@ namespace API.Controllers
             _config = config;
         }
         [HttpGet]
-        [Authorize(Policy = "OnlyAdmins")]
+        //[Authorize(Policy = "OnlyAdmins")]
         public IActionResult GetAllUser([FromQuery] UserQueryFilters filters)
         {
-
+            int numberPrevious = filters.PageNumber - 1;
+            int numberNext = filters.PageNumber + 1;
             var users = _userService.GetAllUsers(filters);
+            Dictionary<string, string> queryParams = new Dictionary<string, string>
+            {
+                { "IdRol", filters.IdRol.ToString() },
+                {"PageSize", filters.PageSize == 0 ? "1" : filters.PageSize.ToString() }
+            };
+            var previousQueryParams = queryParams;
+            previousQueryParams["PageNumber"] = users.hasPreviousPage == false ? "false" : numberPrevious.ToString();
+            var previousParamsURL = QueryHelpers.AddQueryString("https://apifakerubikstore.azurewebsites.net/api/User", previousQueryParams);
+
+            var nextQueryParams = queryParams;
+            nextQueryParams["PageNumber"] = users.hasNextPage == true ? numberNext.ToString() : "false";
+            var nextParamsURL = QueryHelpers.AddQueryString("https://apifakerubikstore.azurewebsites.net/api/User", nextQueryParams);
+
             var usersDTO = _mapper.Map<IEnumerable<UserDTO>>(users);
             MetaData metaData = new MetaData()
             {
@@ -41,9 +56,10 @@ namespace API.Controllers
                 PageSize = users.PageSize,
                 TotalCount = users.PageCount,
                 TotalPage = users.TotalPages,
-                NextPageURL = "",
-                PreviousPageURL = ""
+                NextPageURL = nextParamsURL,
+                PreviousPageURL = previousParamsURL
             };
+             
             var response = new ResponsePagination<IEnumerable<UserDTO>>(usersDTO,
                 "this is the all users",
                 200,
