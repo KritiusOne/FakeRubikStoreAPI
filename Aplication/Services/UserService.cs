@@ -29,6 +29,10 @@ namespace Aplication.Services
             {
                 AllUsers = AllUsers.Where(user => user.IdRole == filters.IdRol);
             }
+            if(filters.Email != null)
+            {
+                AllUsers = AllUsers.Where(user => user.Email.ToLower().Contains(filters.Email.ToLower()));
+            }
             var usersPagination = PagedList<User>.CreatedPagedList(AllUsers, filters.PageNumber, filters.PageSize);
             return usersPagination;
         }

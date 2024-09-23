@@ -28,7 +28,7 @@ namespace API.Controllers
             _config = config;
         }
         [HttpGet]
-        //[Authorize(Policy = "OnlyAdmins")]
+        [Authorize(Policy = "OnlyAdmins")]
         public IActionResult GetAllUser([FromQuery] UserQueryFilters filters)
         {
             int numberPrevious = filters.PageNumber - 1;
@@ -37,7 +37,8 @@ namespace API.Controllers
             Dictionary<string, string> queryParams = new Dictionary<string, string>
             {
                 { "IdRol", filters.IdRol.ToString() },
-                {"PageSize", filters.PageSize == 0 ? "1" : filters.PageSize.ToString() }
+                {"PageSize", filters.PageSize == 0 ? "1" : filters.PageSize.ToString() },
+                {"Email", filters.Email }
             };
             var previousQueryParams = queryParams;
             previousQueryParams["PageNumber"] = users.hasPreviousPage == false ? "false" : numberPrevious.ToString();
