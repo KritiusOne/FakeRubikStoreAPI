@@ -3,6 +3,7 @@ using API.Response;
 using Aplication.CustomEntities;
 using Aplication.DTOs.Users;
 using Aplication.Entities;
+using Aplication.Enums;
 using Aplication.Interfaces;
 using Aplication.QueryFilters;
 using AutoMapper;
@@ -87,6 +88,21 @@ namespace API.Controllers
                 token,
                 "Bearer");
             return Ok(response);
+        }
+        [HttpPut("role/id")]
+        [Authorize(Policy = "OnlyAdmins")]
+        public async Task<IActionResult> UpdateRol(UpdateRolUserDTO dto)
+        {
+            var res = await _userService.UpdateUserRol(dto.IdUserToUpdate, dto.NewIdRol);
+            if(res == -1)
+            {
+                return NotFound($"El usuario {dto.IdUserToUpdate} no existe");
+            }
+            if(res == -2)
+            {
+                return BadRequest($"El rol {dto.NewIdRol} No existe");
+            }
+            return Ok($"Se actualizó el usuario {dto.IdUserToUpdate} al rol {dto.NewIdRol}");
         }
     }
  
