@@ -1,5 +1,6 @@
 ﻿using Aplication.CustomEntities;
 using Aplication.Entities;
+using Aplication.Enums;
 using Aplication.Exceptions;
 using Aplication.Interfaces;
 using Aplication.Options;
@@ -108,6 +109,21 @@ namespace Aplication.Services
             _unitOfWork.UserRepository.Update(id, user);
             await _unitOfWork.SaveChangesAsync();
             return user;
+        }
+
+        public async Task<int> UpdateUserRol(int IdUserToUpdate, int roleId)
+        {
+            var user = await _unitOfWork.UserRepository.GetById(IdUserToUpdate);
+            if (user == null)
+            {
+                return -1; //si no existe el usuario
+            }
+            if (!Enum.IsDefined(typeof(RoleTypes), roleId)) {
+                return -2; //Si no está definido el nuevo rol
+            }
+            user.IdRole = roleId;
+            await _unitOfWork.SaveChangesAsync();
+            return user.Id;
         }
     }
 }
