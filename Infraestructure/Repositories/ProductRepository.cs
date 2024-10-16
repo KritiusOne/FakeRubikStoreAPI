@@ -16,6 +16,7 @@ namespace Infraestructure.Repositories
         {
             return _context.Products
                 .Include(p => p.ProductCategories)
+                    .ThenInclude(p => p.CategoryNav)
                 .Include(p => p.Reviews)
                 .ToList();
         }
