@@ -18,6 +18,22 @@ namespace Aplication.Services
         public PagedList<Product> GetAllProducts(ProductQueryFilter filters)
         {
             var Prod = _unitOfWork.ProductRepo.GetAllWithTables();
+            if(filters.MaxPrice != null)
+            {
+                Prod = Prod.Where(prod => prod.Price <= filters.MaxPrice);
+            }
+            if(filters.MinPrice != null)
+            {
+                Prod = Prod.Where(prod => prod.Price >= filters.MinPrice);
+            }
+            if(filters.NameProduct != null)
+            {
+                Prod = Prod.Where(prod => prod.Name.ToUpper().Contains(filters.NameProduct.ToUpper()));
+            }
+            if(filters.DescriptionProduct != null)
+            {
+                Prod = Prod.Where(prod => prod.Description.ToUpper().Contains(filters.DescriptionProduct.ToUpper()));
+            }
             var paginationProducts = PagedList<Product>.CreatedPagedList(Prod, filters.PageNumber, filters.PageSize);
             return paginationProducts;
         }
