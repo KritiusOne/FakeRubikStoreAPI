@@ -36,7 +36,6 @@ namespace API.Controllers
             var productsDTO = _mapper.Map<IEnumerable<ProductBasicInfoDTO>>(Products);
             Dictionary<string, string> queryParams = new Dictionary<string, string>
             {
-                {"ProductID", filters.ProductID.ToString() },
                 {"MinPrice", filters.MinPrice.ToString()},
                 {"MaxPrice", filters.MaxPrice.ToString() },
                 {"NameProduct", filters.NameProduct },
@@ -77,7 +76,6 @@ namespace API.Controllers
             var productsDTO = _mapper.Map<IEnumerable<ProductWithAllDataDTO>>(Products);
             Dictionary<string, string> queryParams = new Dictionary<string, string>
             {
-                {"ProductID", filters.ProductID.ToString() },
                 {"MinPrice", filters.MinPrice.ToString()},
                 {"MaxPrice", filters.MaxPrice.ToString() },
                 {"NameProduct", filters.NameProduct },
