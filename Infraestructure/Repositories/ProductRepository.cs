@@ -21,6 +21,18 @@ namespace Infraestructure.Repositories
                 .ToList();
         }
 
+        public IEnumerable<Product> GetAllWithTablesFilteredByCategories(List<int> categoriesIds)
+        {
+            var initialFilteredProducts = _context.Products
+                .Include(p => p.ProductCategories)
+                    .ThenInclude(pc => pc.CategoryNav)
+                .Include(p => p.Reviews)
+                .Where(p => p.ProductCategories.Any(pc => categoriesIds.Contains(pc.IdCategory)))
+                .ToList();
+            return initialFilteredProducts
+                .Where(p => categoriesIds.All(Id => p.ProductCategories.Any(pc => pc.IdCategory == Id)));
+        }
+
         public Product GetByIdWithTables(int id)
         {
             var product = _context.Products
