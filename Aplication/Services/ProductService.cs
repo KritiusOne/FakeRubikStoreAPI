@@ -4,6 +4,7 @@ using Aplication.Enums;
 using Aplication.Exceptions;
 using Aplication.Interfaces;
 using Aplication.QueryFilters;
+using System.Collections.Generic;
 
 namespace Aplication.Services
 {
@@ -17,8 +18,8 @@ namespace Aplication.Services
 
         public PagedList<Product> GetAllProducts(ProductQueryFilter filters)
         {
-            var Prod = _unitOfWork.ProductRepo.GetAllWithTables();
-            if(filters.MaxPrice != null)
+            var Prod = filters.CategoriesIds == null ? _unitOfWork.ProductRepo.GetAllWithTables() : _unitOfWork.ProductRepo.GetAllWithTablesFilteredByCategories(filters.CategoriesIds);
+            if (filters.MaxPrice != null)
             {
                 Prod = Prod.Where(prod => prod.Price <= filters.MaxPrice);
             }
