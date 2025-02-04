@@ -1,4 +1,5 @@
-﻿using Aplication.Entities;
+﻿using Aplication.CustomEntities;
+using Aplication.Entities;
 
 namespace Aplication.Interfaces
 {
@@ -8,5 +9,7 @@ namespace Aplication.Interfaces
         IEnumerable<UserDirection> GetAll();
         UserDirection GetById(int id);
         Task<UserDirection> Update(int id, UserDirection userDirection);
+        Task<string> GetExternalCities();
+        Task CreateExternalCitiesAndDepartament(List<ExternalMunicipalities> externals);
     }
 }

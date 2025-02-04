@@ -7,6 +7,7 @@ namespace Aplication.Interfaces
         UserDirection AddVoid(UserDirection userDirection);
         IEnumerable<UserDirection> GetAllWithUser();
         UserDirection GetByIdWithUserInfo(int id);
-
+        Task<List<Departament>> CreateDepartments(List<Departament> departments);
+        Task<List<City>> CreateCities(List<City> Cities);
     }
 }
