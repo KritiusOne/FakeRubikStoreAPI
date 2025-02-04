@@ -51,6 +51,7 @@ namespace API.Controllers
             return Ok(response);
         }
         [HttpPost("/CreateCities")]
+        [Authorize(Policy = "OnlyAdmins")]
         public async Task<IActionResult> CreateCities()
         {
             string json = await _AddressService.GetExternalCities();
