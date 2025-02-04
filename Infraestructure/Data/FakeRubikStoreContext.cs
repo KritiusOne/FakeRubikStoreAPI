@@ -23,6 +23,11 @@ public partial class FakeRubikStoreContext : DbContext
 
     public virtual DbSet<Delivery> Deliveries { get; set; }
 
+    public virtual DbSet<Departament> Departaments { get; set; }
+    public virtual DbSet<City> Cities { get; set; }
+    public virtual DbSet<Country> Countries { get; set; }
+
+
     public virtual DbSet<State> States { get; set; }
 
     public virtual DbSet<Order> Orders { get; set; }
