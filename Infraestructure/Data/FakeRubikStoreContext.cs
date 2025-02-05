@@ -45,6 +45,8 @@ public partial class FakeRubikStoreContext : DbContext
     public virtual DbSet<Role> Roles { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
+    public virtual DbSet<Card> Cards { get; set; }
+    public virtual DbSet<CardType> CardTypes { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<ProductCategory>()
