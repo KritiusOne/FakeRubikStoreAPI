@@ -13,8 +13,9 @@ namespace Infraestructure.Data.Config
 
             entity.Property(e => e.IdCardType)
                 .HasColumnName("IdTipoTarjeta");
-            entity.Property(e => e.NumberCard)
-                .HasMaxLength(20);
+            entity.Property(e => e.CardNumber)
+                .HasMaxLength(20)
+                .HasColumnName("NumeroTarjeta");
 
             entity.HasOne(e => e.Type).WithMany(x => x.Cards)
                 .HasForeignKey(e => e.IdCardType)
