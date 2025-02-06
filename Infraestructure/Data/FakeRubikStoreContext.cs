@@ -36,10 +36,6 @@ public partial class FakeRubikStoreContext : DbContext
 
     public virtual DbSet<OrdersProducts> ProductsOrders { get; set; }
 
-    public virtual DbSet<ProductsProviders> ProductsProviders { get; set; }
-
-    public virtual DbSet<Provider> Providers { get; set; }
-
     public virtual DbSet<Review> Reviews { get; set; }
 
     public virtual DbSet<Role> Roles { get; set; }
@@ -54,12 +50,6 @@ public partial class FakeRubikStoreContext : DbContext
             {
                 e.IdProduct,
                 e.IdCategory
-            });
-        modelBuilder.Entity<ProductsProviders>()
-            .HasKey(e => new
-            {
-                e.IdProduct,
-                e.IdProvider
             });
         modelBuilder.Entity<OrdersProducts>()
             .HasKey(e => new
