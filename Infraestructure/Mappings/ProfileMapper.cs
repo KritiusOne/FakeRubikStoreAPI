@@ -1,5 +1,6 @@
 ﻿using Aplication.DTOs;
 using Aplication.DTOs.Address;
+using Aplication.DTOs.Cards;
 using Aplication.DTOs.Orders;
 using Aplication.DTOs.Products;
 using Aplication.DTOs.Users;
@@ -50,6 +51,12 @@ namespace Infraestructure.Mappings
             CreateMap<OrdersProducts, OrderProductCompleteInfoDTO>()
                 .ReverseMap();
             CreateMap<Order, OrderCompleteInfoDTO>().ReverseMap();
+
+
+            CreateMap<Card, CardDTO>().ReverseMap();
+            CreateMap<CreateCardDTO, Card>().ReverseMap();
+            CreateMap<CardType, CardTypeDTO>().ReverseMap();
+            CreateMap<CardInfoDTO, Card>().ReverseMap();
         }
     }
 }
