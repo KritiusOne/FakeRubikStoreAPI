@@ -56,6 +56,8 @@ builder.Services.AddTransient<IDeliveryService, DeliveryService>();
 builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
 builder.Services.AddTransient<ICategoryService, CategoryService>();
 builder.Services.AddTransient<IBlobServices, BlobServices>();
+builder.Services.AddTransient<ICardRepository, CardRepository>();
+builder.Services.AddTransient<ICardServices, CardServices>();
 
 builder.Services.AddSingleton<IUriService>(provider =>
 {
