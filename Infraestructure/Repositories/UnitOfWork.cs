@@ -28,6 +28,8 @@ namespace Infraestructure.Repositories
 
         public ICategoryRepository CategoryRepo => new CategoryRepository(_context);
 
+        public ICardRepository CardRepo => new CardRepository(_context);
+
         public async Task BeginTransactionAsync()
         {
             var dbCtxTransaction = await _context.Database.BeginTransactionAsync();
