@@ -58,6 +58,7 @@ builder.Services.AddTransient<ICategoryService, CategoryService>();
 builder.Services.AddTransient<IBlobServices, BlobServices>();
 builder.Services.AddTransient<ICardRepository, CardRepository>();
 builder.Services.AddTransient<ICardServices, CardServices>();
+builder.Services.AddTransient<IFactusServices, FactusServices>();
 
 builder.Services.AddSingleton<IUriService>(provider =>
 {
