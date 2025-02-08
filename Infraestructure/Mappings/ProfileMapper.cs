@@ -51,7 +51,7 @@ namespace Infraestructure.Mappings
             CreateMap<OrdersProducts, OrderProductCompleteInfoDTO>()
                 .ReverseMap();
             CreateMap<Order, OrderCompleteInfoDTO>().ReverseMap();
-
+            CreateMap<Order, CreateOrderWithFactusDTO>().ReverseMap();
 
             CreateMap<Card, CardDTO>().ReverseMap();
             CreateMap<CreateCardDTO, Card>().ReverseMap();
