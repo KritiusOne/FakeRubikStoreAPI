@@ -20,11 +20,15 @@ namespace API.Controllers
         private readonly IOrderService _service;
         private readonly IMapper _map;
         private readonly IUriService _uriService;
-        public OrderController(IOrderService service, IMapper map, IUriService uriService)
+        private readonly IFactusServices _factus;
+        private readonly IConfiguration _config;
+        public OrderController(IOrderService service, IMapper map, IUriService uriService, IConfiguration config, IFactusServices factus)
         {
             _map = map;
             this._service = service;
             _uriService = uriService;
+            _factus = factus;
+            _config = config;
         }
         [HttpGet]
         //[Authorize(Policy = "OnlyAdmins")]
@@ -81,6 +85,20 @@ namespace API.Controllers
             var Searched = await _service.GetById(id);
             var DTO = _map.Map<OrderCompleteInfoDTO>(Searched);
             return Ok(DTO);
+        }
+        [HttpPost("/create-bill-factus")]
+        public async Task<IActionResult> CreateWithFactus(CreateOrderWithFactusDTO dto)
+        {
+            var newOrder = _map.Map<Order>(dto);
+            //string URL = _config["BaseURL"] + _config["Endpoints:BillCreate"];
+            _factus.SetURL(_config["Factus:BaseURL"] + _config["Factus:Endpoints:Auth"]);
+            string token = await _factus.OAuth(_config["Factus:email"],
+                _config["Factus:password"],
+                _config["Factus:client_id"],
+                _config["Factus:client_secret"]);
+            //var createdBill = await _service.CreateOrderWithFactus(newOrder, URL, CC, token);
+            //var DTO = _map.Map<OrderCompleteInfoDTO>(createdBill);
+            return Ok(token);
         }
     }
 }
