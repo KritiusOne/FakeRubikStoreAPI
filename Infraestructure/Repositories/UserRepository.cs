@@ -1,6 +1,7 @@
 ﻿using Aplication.Entities;
 using Aplication.Interfaces;
 using Infraestructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infraestructure.Repositories
 {
@@ -26,6 +27,15 @@ namespace Infraestructure.Repositories
         {
             var user = _context.Users.Where(users => users.Id == id).FirstOrDefault();
             return user;
+        }
+
+        public User UserWithInfo(int id)
+        {
+            return _context.Users
+                .Include(c => c.InfoCard)
+                    .ThenInclude(t => t.Type)
+                 .Include(a => a.AdressInfo)
+                .FirstOrDefault(u => u.Id == id);
         }
     }
 }
