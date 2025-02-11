@@ -6,7 +6,7 @@
         public string Name { get; set; } = null!;
         public int Quantity { get; set; }
         public double Discount_rate { get; set; }
-        public decimal Price { get; set; }
+        public double Price { get; set; }
         public string Tax_rate { get; set; } = "5.00";
         public int Unit_measure_id { get; set; } = 70;
         public int Standard_code_id { get; set; } = 1;

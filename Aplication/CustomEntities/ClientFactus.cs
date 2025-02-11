@@ -2,6 +2,7 @@
 {
     public class ClientFactus
     {
+        public int identification_document_id { get; set; }
         public string Identification { get; set; } = null!;
         public string? Dv { get; set; }
         public string? Company { get; set; }
