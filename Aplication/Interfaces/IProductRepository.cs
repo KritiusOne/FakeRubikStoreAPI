@@ -7,6 +7,7 @@ namespace Aplication.Interfaces
         IEnumerable<Product> GetAllWithTables();
         IEnumerable<Product> GetAllWithTablesFilteredByCategories(List<int> categoriesIds);
         Product GetByIdWithTables(int id);
+        IEnumerable<Product> GetAllProductsByIds(List<int> Ids);
 
     }
 }
