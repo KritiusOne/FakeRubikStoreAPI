@@ -2,7 +2,7 @@
 {
     public class FactusRetention
     {
-        public string Code { get; set; } = "";
-        public double Porcentaje { get; set; }
+        public string code { get; set; } = "";
+        public string withholding_tax_rate { get; set; }
     }
 }
