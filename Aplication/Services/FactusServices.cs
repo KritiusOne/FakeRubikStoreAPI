@@ -1,6 +1,8 @@
 ﻿using Aplication.CustomEntities.ExternalsClass;
 using Aplication.Exceptions;
 using Aplication.Interfaces;
+using System.Net.Http.Json;
+using System.Text;
 using System.Text.Json;
 
 namespace Aplication.Services
@@ -13,9 +15,34 @@ namespace Aplication.Services
         {
             Client = new HttpClient();
         }
-        public Task<string> BillCreate(string token, string jsonBody, string typeToken)
+        public async Task<string> BillCreate(string token, string jsonBody, string typeToken)
         {
-            throw new NotImplementedException();
+            var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+            Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(typeToken, token);
+            Console.WriteLine(jsonBody); 
+            try
+            {
+                var res = await Client.PostAsync(URL, content);
+                if (res.IsSuccessStatusCode)
+                {
+                    return await res.Content.ReadAsStringAsync();
+                }
+                var contentRes = await res.Content.ReadAsStringAsync();
+                Console.WriteLine(res.StatusCode.ToString());
+                Console.WriteLine("%--$&$--%");
+                Console.WriteLine("%--$&$--%");
+                Console.WriteLine("%--$&$--%");
+                Console.WriteLine("%--$&$--%");
+                Console.WriteLine("%--$&$--%");
+                Console.WriteLine("%--$&$--%");
+                Console.WriteLine("%--$&$--%");
+                Console.WriteLine(contentRes);
+                throw new Exception($"Error on data fetching");
+            }
+            catch(Exception e)
+            {
+                throw new Exception("Error when We did try to create the bill", e);
+            }
         }
 
         public async Task<string> OAuth(string username, string password, string clientId, string ClientSecret)

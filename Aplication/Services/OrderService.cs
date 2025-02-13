@@ -4,15 +4,18 @@ using Aplication.Enums;
 using Aplication.Exceptions;
 using Aplication.Interfaces;
 using Aplication.QueryFilters;
+using System.Text.Json;
 
 namespace Aplication.Services
 {
     public class OrderService : IOrderService
     {
         private readonly IUnitOfWork<Order> _unitOfWork;
-        public OrderService(IUnitOfWork<Order> repo)
+        private readonly IFactusServices _factus;
+        public OrderService(IUnitOfWork<Order> repo, IFactusServices factus)
         {
             this._unitOfWork = repo;
+            _factus = factus;
         }
 
 
@@ -106,5 +109,51 @@ namespace Aplication.Services
             
         }
 
+        public async Task<Order> CreateOrderWithFactus(Order order, string url, string CC, string token)
+        {
+            await _unitOfWork.BeginTransactionAsync();
+            try
+            {
+
+                var UserInfo = _unitOfWork.UserRepository.UserWithInfo(order.IdUser);
+                _factus.SetURL(url);
+                var ProductsItems = new List<FactusItem>();
+                List<int> Ids = new List<int>();
+                DateOnly today = DateOnly.FromDateTime(DateTime.Now);
+                foreach(var item in order.OrderProducts)
+                {
+                    Ids.Add(item.IdProduct);
+                }
+                var ProductsInfo = _unitOfWork.ProductRepo.GetAllProductsByIds(Ids);
+                for(int i = 0; i < order.OrderProducts.Count; i++)
+                {
+                    FactusItem newItem = new FactusItem(ProductsInfo.ElementAt(i).Name,
+                        order.OrderProducts.ElementAt(i).ProductsNumber,
+                        order.OrderProducts.ElementAt(i).IdProduct.ToString(),
+                        ProductsInfo.ElementAt(i).Price);
+                    ProductsItems.Add(newItem);
+                }
+                string newIDMethod = UserInfo.InfoCard == null ? "48" : UserInfo.InfoCard.IdCardType.ToString();
+                var factusBill = new FactusBill(newIDMethod, ProductsItems);
+                factusBill.customer = new ClientFactus(CC,
+                    UserInfo.Name + " " + UserInfo.SecondName,
+                    UserInfo.Email,
+                    UserInfo.Phone,
+                    "2",
+                    UserInfo.AdressInfo.IdCity.ToString());
+               factusBill.items = ProductsItems;
+                _factus.SetURL(url);
+                var JsonFactus = JsonSerializer.Serialize(factusBill);
+                var res = await _factus.BillCreate(token, JsonFactus, "Bearer");
+                Console.WriteLine(res);
+                _unitOfWork.CommitTransaction();
+                return order;
+            }
+            catch(Exception e)
+            {
+                _unitOfWork.RollbackTransaction();
+                throw new Exception("Error on bill creaton", e);
+            }
+        }
     }
 }
