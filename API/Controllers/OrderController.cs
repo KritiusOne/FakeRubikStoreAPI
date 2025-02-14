@@ -90,13 +90,14 @@ namespace API.Controllers
         public async Task<IActionResult> CreateWithFactus(CreateOrderWithFactusDTO dto)
         {
             var newOrder = _map.Map<Order>(dto);
-            string URL = _config["Factus:BaseURL"] + _config["Factus:Endpoints:BillCreate"];
+            (string, string) URLs = (_config["Factus:BaseURL"] + _config["Factus:Endpoints:BillCreate"],
+                _config["Factus:BaseURL"] + _config["Factus:Endpoints:BillValidate"]);
             _factus.SetURL(_config["Factus:BaseURL"] + _config["Factus:Endpoints:Auth"]);
             string token = await _factus.OAuth(_config["Factus:email"],
                 _config["Factus:password"],
                 _config["Factus:client_id"],
                 _config["Factus:client_secret"]);
-            var createdBill = await _service.CreateOrderWithFactus(newOrder, URL, dto.CC, token);
+            var createdBill = await _service.CreateOrderWithFactus(newOrder, URLs, dto.CC, token);
             var DTO = _map.Map<OrderCompleteInfoDTO>(createdBill);
             return Ok(DTO);
         }
