@@ -9,6 +9,6 @@ namespace Aplication.Interfaces
         PagedList<Order> GetAll(OrderQueryFilters filters);
         Task<Order> CreateOrder(Order order);
         Task<Order> GetById(int id);
-        Task<Order> CreateOrderWithFactus(Order order, string url, string CC, string token);
+        Task<Order> CreateOrderWithFactus(Order order, (string, string) Urls, string CC, string token);
     }
 }

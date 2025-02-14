@@ -19,7 +19,7 @@ namespace Aplication.Services
         {
             var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
             Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(typeToken, token);
-            Console.WriteLine(jsonBody); 
+            
             try
             {
                 var res = await Client.PostAsync(URL, content);
@@ -27,16 +27,6 @@ namespace Aplication.Services
                 {
                     return await res.Content.ReadAsStringAsync();
                 }
-                var contentRes = await res.Content.ReadAsStringAsync();
-                Console.WriteLine(res.StatusCode.ToString());
-                Console.WriteLine("%--$&$--%");
-                Console.WriteLine("%--$&$--%");
-                Console.WriteLine("%--$&$--%");
-                Console.WriteLine("%--$&$--%");
-                Console.WriteLine("%--$&$--%");
-                Console.WriteLine("%--$&$--%");
-                Console.WriteLine("%--$&$--%");
-                Console.WriteLine(contentRes);
                 throw new Exception($"Error on data fetching");
             }
             catch(Exception e)
@@ -93,6 +83,32 @@ namespace Aplication.Services
         public void SetURL(string URL)
         {
             this.URL = URL;
+        }
+
+        public async Task<string> BillValidate(string BillNumber, string token, string type_token)
+        {
+            var collection = new MultipartFormDataContent();
+            var content = new StringContent(BillNumber);
+            collection.Add(content, "number");
+
+            var request = new HttpRequestMessage(HttpMethod.Post, URL)
+            {
+                Content = collection
+            };
+            Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(type_token, token);
+
+            try
+            {
+                var res = await Client.SendAsync(request);
+                if (res.IsSuccessStatusCode)
+                {
+                    return await res.Content.ReadAsStringAsync();
+                }
+                throw new BaseException(res.RequestMessage.ToString());
+            }catch (Exception e)
+            {
+                throw new Exception("Error on bill validate", e);
+            }
         }
     }
 }

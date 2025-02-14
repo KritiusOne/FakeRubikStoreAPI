@@ -1,9 +1,11 @@
 ﻿using Aplication.CustomEntities;
+using Aplication.CustomEntities.ExternalsClass;
 using Aplication.Entities;
 using Aplication.Enums;
 using Aplication.Exceptions;
 using Aplication.Interfaces;
 using Aplication.QueryFilters;
+using System;
 using System.Text.Json;
 
 namespace Aplication.Services
@@ -12,16 +14,21 @@ namespace Aplication.Services
     {
         private readonly IUnitOfWork<Order> _unitOfWork;
         private readonly IFactusServices _factus;
+        private JsonSerializerOptions SerializeOptions;
         public OrderService(IUnitOfWork<Order> repo, IFactusServices factus)
         {
             this._unitOfWork = repo;
             _factus = factus;
+            SerializeOptions = new JsonSerializerOptions()
+            {
+                PropertyNamingPolicy = new LowerCaseUnderscoreNamingPolicy(),
+                WriteIndented = true
+            };
         }
 
 
         public PagedList<Order> GetAll(OrderQueryFilters filters)
         {
-            Console.WriteLine(filters.ToString());
             var response = _unitOfWork.OrderRepo.GetAllWithTables();
             if(filters.MinPrice != null)
             {
@@ -109,43 +116,25 @@ namespace Aplication.Services
             
         }
 
-        public async Task<Order> CreateOrderWithFactus(Order order, string url, string CC, string token)
+        public async Task<Order> CreateOrderWithFactus(Order order, (string, string) Urls, string CC, string token)
         {
             await _unitOfWork.BeginTransactionAsync();
             try
             {
-
-                var UserInfo = _unitOfWork.UserRepository.UserWithInfo(order.IdUser);
-                _factus.SetURL(url);
-                var ProductsItems = new List<FactusItem>();
+                _factus.SetURL(Urls.Item1);
                 List<int> Ids = new List<int>();
-                DateOnly today = DateOnly.FromDateTime(DateTime.Now);
                 foreach(var item in order.OrderProducts)
                 {
                     Ids.Add(item.IdProduct);
                 }
-                var ProductsInfo = _unitOfWork.ProductRepo.GetAllProductsByIds(Ids);
-                for(int i = 0; i < order.OrderProducts.Count; i++)
-                {
-                    FactusItem newItem = new FactusItem(ProductsInfo.ElementAt(i).Name,
-                        order.OrderProducts.ElementAt(i).ProductsNumber,
-                        order.OrderProducts.ElementAt(i).IdProduct.ToString(),
-                        ProductsInfo.ElementAt(i).Price);
-                    ProductsItems.Add(newItem);
-                }
-                string newIDMethod = UserInfo.InfoCard == null ? "48" : UserInfo.InfoCard.IdCardType.ToString();
-                var factusBill = new FactusBill(newIDMethod, ProductsItems);
-                factusBill.customer = new ClientFactus(CC,
-                    UserInfo.Name + " " + UserInfo.SecondName,
-                    UserInfo.Email,
-                    UserInfo.Phone,
-                    "2",
-                    UserInfo.AdressInfo.IdCity.ToString());
-               factusBill.items = ProductsItems;
-                _factus.SetURL(url);
+                var factusBill = BillCreateFactus(order.IdUser, Ids, order, CC);
                 var JsonFactus = JsonSerializer.Serialize(factusBill);
                 var res = await _factus.BillCreate(token, JsonFactus, "Bearer");
-                Console.WriteLine(res);
+                var Bill = JsonSerializer.Deserialize<BillCreateResponse>(res, SerializeOptions);
+                _factus.SetURL(Urls.Item2);
+                string validateBillResponse = await _factus.BillValidate(Bill.Data.Bill.Number, token, "Bearer");
+                var BillValidated = JsonSerializer.Deserialize<BillCreateResponse>(validateBillResponse, SerializeOptions);
+
                 _unitOfWork.CommitTransaction();
                 return order;
             }
@@ -154,6 +143,31 @@ namespace Aplication.Services
                 _unitOfWork.RollbackTransaction();
                 throw new Exception("Error on bill creaton", e);
             }
+        }
+        private FactusBill BillCreateFactus(int UserID, List<int> Ids, Order order, string CC)
+        {
+            var UserInfo = _unitOfWork.UserRepository.UserWithInfo(UserID);
+            var ProductsItems = new List<FactusItem>();
+            var ProductsInfo = _unitOfWork.ProductRepo.GetAllProductsByIds(Ids);
+            for (int i = 0; i < order.OrderProducts.Count; i++)
+            {
+                FactusItem newItem = new FactusItem(ProductsInfo.ElementAt(i).Name,
+                    order.OrderProducts.ElementAt(i).ProductsNumber,
+                    order.OrderProducts.ElementAt(i).IdProduct.ToString(),
+                    ProductsInfo.ElementAt(i).Price);
+                ProductsItems.Add(newItem);
+            }
+            string newIDMethod = UserInfo.InfoCard == null ? "48" : UserInfo.InfoCard.IdCardType.ToString();
+            var factusBill = new FactusBill(newIDMethod, ProductsItems);
+            factusBill.customer = new ClientFactus(CC,
+                UserInfo.Name + " " + UserInfo.SecondName,
+                UserInfo.Email,
+                UserInfo.Phone,
+                "2",
+                UserInfo.AdressInfo.IdCity.ToString());
+            factusBill.items = ProductsItems;
+
+            return factusBill;
         }
     }
 }
