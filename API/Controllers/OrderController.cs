@@ -75,7 +75,7 @@ namespace API.Controllers
         public async Task<IActionResult> Create(CreateOrderDTO dto)
         {
             var newOrder = _map.Map<Order>(dto);
-            var CreatedOrder = await _service.CreateOrder(newOrder);
+            var CreatedOrder = await _service.CreateWithBasic(newOrder);
             var DTO = _map.Map<OrderBasicDTO>(CreatedOrder);
             return Ok(DTO);
         }
