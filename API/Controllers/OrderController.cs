@@ -20,11 +20,15 @@ namespace API.Controllers
         private readonly IOrderService _service;
         private readonly IMapper _map;
         private readonly IUriService _uriService;
-        public OrderController(IOrderService service, IMapper map, IUriService uriService)
+        private readonly IFactusServices _factus;
+        private readonly IConfiguration _config;
+        public OrderController(IOrderService service, IMapper map, IUriService uriService, IConfiguration config, IFactusServices factus)
         {
             _map = map;
             this._service = service;
             _uriService = uriService;
+            _factus = factus;
+            _config = config;
         }
         [HttpGet]
         //[Authorize(Policy = "OnlyAdmins")]
@@ -71,7 +75,7 @@ namespace API.Controllers
         public async Task<IActionResult> Create(CreateOrderDTO dto)
         {
             var newOrder = _map.Map<Order>(dto);
-            var CreatedOrder = await _service.CreateOrder(newOrder);
+            var CreatedOrder = await _service.CreateWithBasic(newOrder);
             var DTO = _map.Map<OrderBasicDTO>(CreatedOrder);
             return Ok(DTO);
         }
@@ -80,6 +84,21 @@ namespace API.Controllers
         {
             var Searched = await _service.GetById(id);
             var DTO = _map.Map<OrderCompleteInfoDTO>(Searched);
+            return Ok(DTO);
+        }
+        [HttpPost("/create-bill-factus")]
+        public async Task<IActionResult> CreateWithFactus(CreateOrderWithFactusDTO dto)
+        {
+            var newOrder = _map.Map<Order>(dto);
+            (string, string) URLs = (_config["Factus:BaseURL"] + _config["Factus:Endpoints:BillCreate"],
+                _config["Factus:BaseURL"] + _config["Factus:Endpoints:BillValidate"]);
+            _factus.SetURL(_config["Factus:BaseURL"] + _config["Factus:Endpoints:Auth"]);
+            string token = await _factus.OAuth(_config["Factus:email"],
+                _config["Factus:password"],
+                _config["Factus:client_id"],
+                _config["Factus:client_secret"]);
+            var createdBill = await _service.CreateOrderWithFactus(newOrder, URLs, dto.CC, token);
+            var DTO = _map.Map<OrderCompleteInfoDTO>(createdBill);
             return Ok(DTO);
         }
     }

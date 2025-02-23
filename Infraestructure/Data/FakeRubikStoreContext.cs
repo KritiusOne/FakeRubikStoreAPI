@@ -23,6 +23,11 @@ public partial class FakeRubikStoreContext : DbContext
 
     public virtual DbSet<Delivery> Deliveries { get; set; }
 
+    public virtual DbSet<Departament> Departaments { get; set; }
+    public virtual DbSet<City> Cities { get; set; }
+    public virtual DbSet<Country> Countries { get; set; }
+
+
     public virtual DbSet<State> States { get; set; }
 
     public virtual DbSet<Order> Orders { get; set; }
@@ -31,15 +36,13 @@ public partial class FakeRubikStoreContext : DbContext
 
     public virtual DbSet<OrdersProducts> ProductsOrders { get; set; }
 
-    public virtual DbSet<ProductsProviders> ProductsProviders { get; set; }
-
-    public virtual DbSet<Provider> Providers { get; set; }
-
     public virtual DbSet<Review> Reviews { get; set; }
 
     public virtual DbSet<Role> Roles { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
+    public virtual DbSet<Card> Cards { get; set; }
+    public virtual DbSet<CardType> CardTypes { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<ProductCategory>()
@@ -47,12 +50,6 @@ public partial class FakeRubikStoreContext : DbContext
             {
                 e.IdProduct,
                 e.IdCategory
-            });
-        modelBuilder.Entity<ProductsProviders>()
-            .HasKey(e => new
-            {
-                e.IdProduct,
-                e.IdProvider
             });
         modelBuilder.Entity<OrdersProducts>()
             .HasKey(e => new

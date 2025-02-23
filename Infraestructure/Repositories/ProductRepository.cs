@@ -12,6 +12,11 @@ namespace Infraestructure.Repositories
             
         }
 
+        public IEnumerable<Product> GetAllProductsByIds(List<int> Ids)
+        {
+            return _entities.Where(p => Ids.Contains(p.Id)).ToList();
+        }
+
         public IEnumerable<Product> GetAllWithTables()
         {
             return _context.Products

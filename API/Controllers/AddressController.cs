@@ -1,4 +1,6 @@
-﻿using API.Response;
+﻿using API.CustomClass.External;
+using API.Response;
+using Aplication.CustomEntities;
 using Aplication.DTOs;
 using Aplication.Entities;
 using Aplication.Interfaces;
@@ -6,6 +8,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace API.Controllers
 {
@@ -46,6 +49,19 @@ namespace API.Controllers
             var directionResponseDTO = _mapper.Map<AddressWithUserDTO>(directionResponse);
             var response = new ResponseBase<AddressWithUserDTO>(directionResponseDTO, "the direction update was success");
             return Ok(response);
+        }
+        [HttpPost("/CreateCities")]
+        [Authorize(Policy = "OnlyAdmins")]
+        public async Task<IActionResult> CreateCities()
+        {
+            string json = await _AddressService.GetExternalCities();
+            if(json == "Error")
+            {
+                return BadRequest("Error al llamar a las ciudades");
+            }
+            var jsonResponse = JsonConvert.DeserializeObject<FactusResponseBase<ExternalMunicipalities>>(json);
+            await _AddressService.CreateExternalCitiesAndDepartament(jsonResponse.Data);
+            return Ok(jsonResponse);
         }
     }
 }

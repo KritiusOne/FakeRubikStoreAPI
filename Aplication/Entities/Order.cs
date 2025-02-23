@@ -12,6 +12,8 @@ public partial class Order : BaseEntity
 
     public string NumberCard { get; set; } = null!;
 
+    public string? BillDian { get; set; }
+
     public virtual Delivery DeliveryInfo { get; set; } = null!;
 
     public virtual User UserInfo { get; set; } = null!;

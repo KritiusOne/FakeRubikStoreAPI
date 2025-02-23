@@ -23,5 +23,4 @@ public partial class Product : BaseEntity
 
     public virtual ICollection<OrdersProducts> OrderProducts { get; } = new List<OrdersProducts>();
 
-    public virtual ICollection<ProductsProviders> ProvidersProducts { get; } = new List<ProductsProviders>();
 }

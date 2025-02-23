@@ -29,6 +29,7 @@ namespace Infraestructure.Data.Config
                 .HasColumnName("Telefono");
             entity.Property(e => e.IdRole).HasColumnName("IdRol");
             entity.Property(e => e.IdAddress).HasColumnName("IdDireccion");
+            entity.Property(e => e.IdCard).HasColumnName("IdTarjeta");
 
             entity.HasOne(d => d.RoleNav).WithMany(p => p.Users)
                 .HasForeignKey(d => d.IdRole)
@@ -38,6 +39,10 @@ namespace Infraestructure.Data.Config
                 .HasForeignKey<User>(x => x.IdAddress)
                 .HasPrincipalKey<UserDirection>(x => x.Id)
                 .HasConstraintName("FK_Usuarios_Direccion");
+            entity.HasOne(e => e.InfoCard).WithOne(x => x.User)
+                .HasForeignKey<User>(e => e.IdCard)
+                .HasConstraintName("FK_Usuarios_Tarjeta")
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

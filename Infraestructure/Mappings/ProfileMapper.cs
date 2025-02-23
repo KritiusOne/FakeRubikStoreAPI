@@ -1,4 +1,6 @@
 ﻿using Aplication.DTOs;
+using Aplication.DTOs.Address;
+using Aplication.DTOs.Cards;
 using Aplication.DTOs.Orders;
 using Aplication.DTOs.Products;
 using Aplication.DTOs.Users;
@@ -14,10 +16,19 @@ namespace Infraestructure.Mappings
             CreateMap<User, UserDTO>().ReverseMap();
             CreateMap<User, CreateUserDTO>().ReverseMap();
             CreateMap<User, UserWithAddressDTO>().ReverseMap();
-            CreateMap<UserDirection, AddressDTO>().ReverseMap();
-            CreateMap<UserDirection, AddressWithUserDTO>().ReverseMap();
             CreateMap<User, UserMinimalDTO>().ReverseMap();
 
+            CreateMap<UserDirection, AddressDTO>().ReverseMap();
+            CreateMap<UserDirection, AddressWithUserDTO>().ReverseMap();
+            CreateMap<City, CityDTO>()
+                .ForMember(dest => dest.NameCity, opt => opt.MapFrom(src => src.Name))
+                .ReverseMap();
+            CreateMap<Departament, DepartamentDTO>()
+                .ForMember(departament => departament.NameDepartament, dto => dto.MapFrom(src => src.Name))
+                .ReverseMap();
+            CreateMap<Country, CountryDTO>()
+                .ForMember(country => country.CountryName, dto => dto.MapFrom(src => src.Name))
+                .ReverseMap();
             CreateMap<Role, RoleDTO>().ReverseMap();
             CreateMap<State, StateDTO>().ReverseMap();
             CreateMap<Category, CategoryDTO>().ReverseMap();
@@ -40,6 +51,12 @@ namespace Infraestructure.Mappings
             CreateMap<OrdersProducts, OrderProductCompleteInfoDTO>()
                 .ReverseMap();
             CreateMap<Order, OrderCompleteInfoDTO>().ReverseMap();
+            CreateMap<Order, CreateOrderWithFactusDTO>().ReverseMap();
+
+            CreateMap<Card, CardDTO>().ReverseMap();
+            CreateMap<CreateCardDTO, Card>().ReverseMap();
+            CreateMap<CardType, CardTypeDTO>().ReverseMap();
+            CreateMap<CardInfoDTO, Card>().ReverseMap();
         }
     }
 }

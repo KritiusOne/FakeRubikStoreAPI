@@ -56,6 +56,9 @@ builder.Services.AddTransient<IDeliveryService, DeliveryService>();
 builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
 builder.Services.AddTransient<ICategoryService, CategoryService>();
 builder.Services.AddTransient<IBlobServices, BlobServices>();
+builder.Services.AddTransient<ICardRepository, CardRepository>();
+builder.Services.AddTransient<ICardServices, CardServices>();
+builder.Services.AddTransient<IFactusServices, FactusServices>();
 
 builder.Services.AddSingleton<IUriService>(provider =>
 {
@@ -68,7 +71,7 @@ builder.Services.AddSingleton<IUriService>(provider =>
 
 builder.Services.AddDbContext<FakeRubikStoreContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("Prod")).LogTo(Console.WriteLine, LogLevel.Information);
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Dev")).LogTo(Console.WriteLine, LogLevel.Information);
 });
 
 builder.Services.AddAuthentication(opt =>
