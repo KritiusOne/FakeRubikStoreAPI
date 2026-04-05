@@ -3,8 +3,8 @@ using System;
 using Infraestructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
@@ -17,24 +17,24 @@ namespace Infraestructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.0")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+                .HasAnnotation("ProductVersion", "8.0.0")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("Aplication.Entities.Category", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(50)")
+                        .HasColumnType("character varying(50)")
                         .HasColumnName("Nombre");
 
                     b.HasKey("Id");
@@ -46,23 +46,23 @@ namespace Infraestructure.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Code")
                         .IsRequired()
                         .HasMaxLength(100)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(100)")
+                        .HasColumnType("character varying(100)")
                         .HasColumnName("Codigo");
 
                     b.Property<int>("IdState")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("IdEstado");
 
                     b.Property<int>("IdUser")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("IdUsuario");
 
                     b.HasKey("Id");
@@ -78,24 +78,29 @@ namespace Infraestructure.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("Date")
-                        .HasColumnType("datetime")
+                        .HasColumnType("timestamp")
                         .HasColumnName("Fecha");
 
                     b.Property<double>("FinalPrice")
-                        .HasColumnType("float")
+                        .HasColumnType("double precision")
                         .HasColumnName("PrecioFinal");
 
                     b.Property<int>("IdDelivery")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("IdEnvio");
 
                     b.Property<int>("IdUser")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
+
+                    b.Property<string>("NumberCard")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("numerotarjeta");
 
                     b.HasKey("Id");
 
@@ -108,33 +113,25 @@ namespace Infraestructure.Migrations
 
             modelBuilder.Entity("Aplication.Entities.OrdersProducts", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("IdOrder")
-                        .HasColumnType("int")
-                        .HasColumnName("IdOrden");
-
-                    b.Property<int?>("IdProduct")
-                        .HasColumnType("int")
+                    b.Property<int>("IdProduct")
+                        .HasColumnType("integer")
                         .HasColumnName("IdProducto");
 
+                    b.Property<int>("IdOrder")
+                        .HasColumnType("integer")
+                        .HasColumnName("IdOrden");
+
                     b.Property<double>("Price")
-                        .HasColumnType("float")
+                        .HasColumnType("double precision")
                         .HasColumnName("Precio");
 
                     b.Property<int>("ProductsNumber")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("Cantidad");
 
-                    b.HasKey("Id");
+                    b.HasKey("IdProduct", "IdOrder");
 
                     b.HasIndex("IdOrder");
-
-                    b.HasIndex("IdProduct");
 
                     b.ToTable("Productos_Ordenes", (string)null);
                 });
@@ -143,60 +140,55 @@ namespace Infraestructure.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(200)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(200)")
+                        .HasColumnType("text")
                         .HasColumnName("Descripcion");
 
                     b.Property<string>("Image")
-                        .HasMaxLength(50)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(50)")
+                        .HasColumnType("text")
                         .HasColumnName("Imagen");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(50)")
+                        .HasColumnType("character varying(50)")
                         .HasColumnName("NombreProducto");
 
                     b.Property<double>("Price")
-                        .HasColumnType("float");
+                        .HasColumnType("double precision")
+                        .HasColumnName("Precio");
 
                     b.Property<int>("Stock")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<string>("Thumbnail")
                         .IsRequired()
-                        .HasMaxLength(50)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(50)")
+                        .HasColumnType("text")
                         .HasColumnName("Miniatura");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Products");
+                    b.ToTable("Productos", (string)null);
                 });
 
             modelBuilder.Entity("Aplication.Entities.ProductCategory", b =>
                 {
                     b.Property<int>("IdProduct")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("IdProducto");
 
                     b.Property<int>("IdCategory")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("IdCategoria");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
 
                     b.HasKey("IdProduct", "IdCategory");
 
@@ -208,19 +200,19 @@ namespace Infraestructure.Migrations
             modelBuilder.Entity("Aplication.Entities.ProductsProviders", b =>
                 {
                     b.Property<int>("IdProduct")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("IdProvider")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("Id")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("IdProductosNavigationId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("IdProveedoresNavigationId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.HasKey("IdProduct", "IdProvider");
 
@@ -235,21 +227,21 @@ namespace Infraestructure.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Phone")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -258,26 +250,25 @@ namespace Infraestructure.Migrations
 
             modelBuilder.Entity("Aplication.Entities.Review", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<int>("ProductId")
+                        .HasColumnType("integer")
+                        .HasColumnName("IdProducto");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer")
+                        .HasColumnName("UsuarioId");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("text")
                         .HasColumnName("Descripcion");
 
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Rate")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("rate");
 
-                    b.HasKey("Id");
+                    b.HasKey("ProductId", "UserId");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Reviews", (string)null);
                 });
@@ -286,16 +277,16 @@ namespace Infraestructure.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("IdRol");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(20)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(20)")
+                        .HasColumnType("character varying(20)")
                         .HasColumnName("Nombre");
 
                     b.HasKey("Id");
@@ -307,15 +298,15 @@ namespace Infraestructure.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(50)")
+                        .HasColumnType("character varying(50)")
                         .HasColumnName("Nombre");
 
                     b.HasKey("Id");
@@ -327,47 +318,47 @@ namespace Infraestructure.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(50)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("character varying(50)");
 
                     b.Property<int>("IdAddress")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("IdDireccion");
 
                     b.Property<int>("IdRole")
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasColumnName("IdRol");
 
                     b.Property<string>("Name")
                         .HasMaxLength(50)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(50)")
+                        .HasColumnType("character varying(50)")
                         .HasColumnName("Nombre");
 
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)")
+                        .HasColumnType("character varying(150)")
                         .HasColumnName("Contrasena");
 
                     b.Property<string>("Phone")
                         .IsRequired()
                         .HasMaxLength(30)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(30)")
+                        .HasColumnType("character varying(30)")
                         .HasColumnName("Telefono");
 
                     b.Property<string>("SecondName")
                         .HasMaxLength(50)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(50)")
+                        .HasColumnType("character varying(50)")
                         .HasColumnName("Apellido");
 
                     b.HasKey("Id");
@@ -384,38 +375,38 @@ namespace Infraestructure.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Address")
                         .HasMaxLength(150)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(150)")
+                        .HasColumnType("character varying(150)")
                         .HasColumnName("Direccion");
 
                     b.Property<string>("City")
                         .HasMaxLength(150)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(150)")
+                        .HasColumnType("character varying(150)")
                         .HasColumnName("ciudad");
 
                     b.Property<string>("Country")
                         .HasMaxLength(150)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(150)")
+                        .HasColumnType("character varying(150)")
                         .HasColumnName("pais");
 
                     b.Property<string>("Description")
                         .HasMaxLength(100)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(100)")
+                        .HasColumnType("character varying(100)")
                         .HasColumnName("descripcion");
 
                     b.Property<string>("State")
                         .HasMaxLength(150)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(150)")
+                        .HasColumnType("character varying(150)")
                         .HasColumnName("estado");
 
                     b.HasKey("Id");
@@ -444,21 +435,22 @@ namespace Infraestructure.Migrations
 
             modelBuilder.Entity("Aplication.Entities.Order", b =>
                 {
-                    b.HasOne("Aplication.Entities.Delivery", "DeliveryNav")
+                    b.HasOne("Aplication.Entities.Delivery", "DeliveryInfo")
                         .WithMany("Orders")
                         .HasForeignKey("IdDelivery")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_Ordenes_Envios");
 
-                    b.HasOne("Aplication.Entities.User", "UserNav")
+                    b.HasOne("Aplication.Entities.User", "UserInfo")
                         .WithMany("Orders")
                         .HasForeignKey("IdUser")
                         .IsRequired()
                         .HasConstraintName("FK_Ordenes_Usuarios");
 
-                    b.Navigation("DeliveryNav");
+                    b.Navigation("DeliveryInfo");
 
-                    b.Navigation("UserNav");
+                    b.Navigation("UserInfo");
                 });
 
             modelBuilder.Entity("Aplication.Entities.OrdersProducts", b =>
@@ -469,14 +461,16 @@ namespace Infraestructure.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_Productos_Ordenes_Ordenes");
 
-                    b.HasOne("Aplication.Entities.Product", "ProductNav")
+                    b.HasOne("Aplication.Entities.Product", "ProductInfo")
                         .WithMany("OrderProducts")
                         .HasForeignKey("IdProduct")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("FK_Productos_Ordenes_Productos");
 
                     b.Navigation("OrderNav");
 
-                    b.Navigation("ProductNav");
+                    b.Navigation("ProductInfo");
                 });
 
             modelBuilder.Entity("Aplication.Entities.ProductCategory", b =>
@@ -526,12 +520,21 @@ namespace Infraestructure.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_Review_Productos");
 
+                    b.HasOne("Aplication.Entities.User", "Usuario")
+                        .WithMany("Reviews")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_Reviews_Usuarios");
+
                     b.Navigation("Product");
+
+                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("Aplication.Entities.User", b =>
                 {
-                    b.HasOne("Aplication.Entities.UserDirection", "UserDirectionNav")
+                    b.HasOne("Aplication.Entities.UserDirection", "AdressInfo")
                         .WithOne("User")
                         .HasForeignKey("Aplication.Entities.User", "IdAddress")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -544,9 +547,9 @@ namespace Infraestructure.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_Usuarios_Rol");
 
-                    b.Navigation("RoleNav");
+                    b.Navigation("AdressInfo");
 
-                    b.Navigation("UserDirectionNav");
+                    b.Navigation("RoleNav");
                 });
 
             modelBuilder.Entity("Aplication.Entities.Category", b =>
@@ -595,6 +598,8 @@ namespace Infraestructure.Migrations
                     b.Navigation("Deliveries");
 
                     b.Navigation("Orders");
+
+                    b.Navigation("Reviews");
                 });
 
             modelBuilder.Entity("Aplication.Entities.UserDirection", b =>
