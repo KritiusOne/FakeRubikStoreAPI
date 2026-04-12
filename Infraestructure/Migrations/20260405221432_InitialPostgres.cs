@@ -1,12 +1,13 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
 namespace Infraestructure.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdateRelations : Migration
+    public partial class InitialPostgres : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,9 +16,9 @@ namespace Infraestructure.Migrations
                 name: "Categorias",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Nombre = table.Column<string>(type: "character varying(50)", unicode: false, maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -28,13 +29,13 @@ namespace Infraestructure.Migrations
                 name: "Direccion",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Direccion = table.Column<string>(type: "varchar(150)", unicode: false, maxLength: 150, nullable: true),
-                    ciudad = table.Column<string>(type: "varchar(150)", unicode: false, maxLength: 150, nullable: true),
-                    estado = table.Column<string>(type: "varchar(150)", unicode: false, maxLength: 150, nullable: true),
-                    pais = table.Column<string>(type: "varchar(150)", unicode: false, maxLength: 150, nullable: true),
-                    descripcion = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: true)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Direccion = table.Column<string>(type: "character varying(150)", unicode: false, maxLength: 150, nullable: true),
+                    ciudad = table.Column<string>(type: "character varying(150)", unicode: false, maxLength: 150, nullable: true),
+                    estado = table.Column<string>(type: "character varying(150)", unicode: false, maxLength: 150, nullable: true),
+                    pais = table.Column<string>(type: "character varying(150)", unicode: false, maxLength: 150, nullable: true),
+                    descripcion = table.Column<string>(type: "character varying(100)", unicode: false, maxLength: 100, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -45,9 +46,9 @@ namespace Infraestructure.Migrations
                 name: "Estado",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Nombre = table.Column<string>(type: "character varying(50)", unicode: false, maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -55,32 +56,32 @@ namespace Infraestructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Products",
+                name: "Productos",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    NombreProducto = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
-                    Price = table.Column<double>(type: "float", nullable: false),
-                    Stock = table.Column<int>(type: "int", nullable: false),
-                    Imagen = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true),
-                    Descripcion = table.Column<string>(type: "varchar(200)", unicode: false, maxLength: 200, nullable: false),
-                    Miniatura = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    NombreProducto = table.Column<string>(type: "character varying(50)", unicode: false, maxLength: 50, nullable: false),
+                    Precio = table.Column<double>(type: "double precision", nullable: false),
+                    Stock = table.Column<int>(type: "integer", nullable: false),
+                    Imagen = table.Column<string>(type: "text", unicode: false, nullable: true),
+                    Descripcion = table.Column<string>(type: "text", unicode: false, nullable: false),
+                    Miniatura = table.Column<string>(type: "text", unicode: false, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Products", x => x.Id);
+                    table.PrimaryKey("PK_Productos", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Providers",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Phone = table.Column<string>(type: "text", nullable: false),
+                    Email = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -91,9 +92,9 @@ namespace Infraestructure.Migrations
                 name: "Rol",
                 columns: table => new
                 {
-                    IdRol = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: false)
+                    IdRol = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Nombre = table.Column<string>(type: "character varying(20)", unicode: false, maxLength: 20, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -104,9 +105,8 @@ namespace Infraestructure.Migrations
                 name: "Categorias_Productos",
                 columns: table => new
                 {
-                    IdCategoria = table.Column<int>(type: "int", nullable: false),
-                    IdProducto = table.Column<int>(type: "int", nullable: false),
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    IdCategoria = table.Column<int>(type: "integer", nullable: false),
+                    IdProducto = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -119,48 +119,27 @@ namespace Infraestructure.Migrations
                     table.ForeignKey(
                         name: "FK_Categorias_Productos_Productos",
                         column: x => x.IdProducto,
-                        principalTable: "Products",
+                        principalTable: "Productos",
                         principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Reviews",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ProductId = table.Column<int>(type: "int", nullable: false),
-                    Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    rate = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Reviews", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Review_Productos",
-                        column: x => x.ProductId,
-                        principalTable: "Products",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
                 name: "ProductsProviders",
                 columns: table => new
                 {
-                    IdProvider = table.Column<int>(type: "int", nullable: false),
-                    IdProduct = table.Column<int>(type: "int", nullable: false),
-                    IdProductosNavigationId = table.Column<int>(type: "int", nullable: false),
-                    IdProveedoresNavigationId = table.Column<int>(type: "int", nullable: false),
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    IdProvider = table.Column<int>(type: "integer", nullable: false),
+                    IdProduct = table.Column<int>(type: "integer", nullable: false),
+                    IdProductosNavigationId = table.Column<int>(type: "integer", nullable: false),
+                    IdProveedoresNavigationId = table.Column<int>(type: "integer", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ProductsProviders", x => new { x.IdProduct, x.IdProvider });
                     table.ForeignKey(
-                        name: "FK_ProductsProviders_Products_IdProductosNavigationId",
+                        name: "FK_ProductsProviders_Productos_IdProductosNavigationId",
                         column: x => x.IdProductosNavigationId,
-                        principalTable: "Products",
+                        principalTable: "Productos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -175,15 +154,15 @@ namespace Infraestructure.Migrations
                 name: "Usuarios",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    IdRol = table.Column<int>(type: "int", nullable: false),
-                    IdDireccion = table.Column<int>(type: "int", nullable: false),
-                    Nombre = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true),
-                    Apellido = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: true),
-                    Email = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
-                    Contrasena = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    Telefono = table.Column<string>(type: "varchar(30)", unicode: false, maxLength: 30, nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    IdRol = table.Column<int>(type: "integer", nullable: false),
+                    IdDireccion = table.Column<int>(type: "integer", nullable: false),
+                    Nombre = table.Column<string>(type: "character varying(50)", unicode: false, maxLength: 50, nullable: true),
+                    Apellido = table.Column<string>(type: "character varying(50)", unicode: false, maxLength: 50, nullable: true),
+                    Email = table.Column<string>(type: "character varying(50)", unicode: false, maxLength: 50, nullable: false),
+                    Contrasena = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
+                    Telefono = table.Column<string>(type: "character varying(30)", unicode: false, maxLength: 30, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -205,11 +184,11 @@ namespace Infraestructure.Migrations
                 name: "Envios",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    IdEstado = table.Column<int>(type: "int", nullable: false),
-                    IdUsuario = table.Column<int>(type: "int", nullable: false),
-                    Codigo = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    IdEstado = table.Column<int>(type: "integer", nullable: false),
+                    IdUsuario = table.Column<int>(type: "integer", nullable: false),
+                    Codigo = table.Column<string>(type: "character varying(100)", unicode: false, maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -227,15 +206,42 @@ namespace Infraestructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Reviews",
+                columns: table => new
+                {
+                    IdProducto = table.Column<int>(type: "integer", nullable: false),
+                    UsuarioId = table.Column<int>(type: "integer", nullable: false),
+                    Descripcion = table.Column<string>(type: "text", nullable: true),
+                    rate = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Reviews", x => new { x.IdProducto, x.UsuarioId });
+                    table.ForeignKey(
+                        name: "FK_Review_Productos",
+                        column: x => x.IdProducto,
+                        principalTable: "Productos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Reviews_Usuarios",
+                        column: x => x.UsuarioId,
+                        principalTable: "Usuarios",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Ordenes",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    IdUser = table.Column<int>(type: "int", nullable: false),
-                    IdEnvio = table.Column<int>(type: "int", nullable: false),
-                    Fecha = table.Column<DateTime>(type: "datetime", nullable: false),
-                    PrecioFinal = table.Column<double>(type: "float", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    IdUser = table.Column<int>(type: "integer", nullable: false),
+                    IdEnvio = table.Column<int>(type: "integer", nullable: false),
+                    Fecha = table.Column<DateTime>(type: "timestamp", nullable: false),
+                    PrecioFinal = table.Column<double>(type: "double precision", nullable: false),
+                    numerotarjeta = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -244,7 +250,8 @@ namespace Infraestructure.Migrations
                         name: "FK_Ordenes_Envios",
                         column: x => x.IdEnvio,
                         principalTable: "Envios",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Ordenes_Usuarios",
                         column: x => x.IdUser,
@@ -256,16 +263,14 @@ namespace Infraestructure.Migrations
                 name: "Productos_Ordenes",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    IdProducto = table.Column<int>(type: "int", nullable: true),
-                    IdOrden = table.Column<int>(type: "int", nullable: false),
-                    Cantidad = table.Column<int>(type: "int", nullable: false),
-                    Precio = table.Column<double>(type: "float", nullable: false)
+                    IdProducto = table.Column<int>(type: "integer", nullable: false),
+                    IdOrden = table.Column<int>(type: "integer", nullable: false),
+                    Cantidad = table.Column<int>(type: "integer", nullable: false),
+                    Precio = table.Column<double>(type: "double precision", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Productos_Ordenes", x => x.Id);
+                    table.PrimaryKey("PK_Productos_Ordenes", x => new { x.IdProducto, x.IdOrden });
                     table.ForeignKey(
                         name: "FK_Productos_Ordenes_Ordenes",
                         column: x => x.IdOrden,
@@ -274,8 +279,9 @@ namespace Infraestructure.Migrations
                     table.ForeignKey(
                         name: "FK_Productos_Ordenes_Productos",
                         column: x => x.IdProducto,
-                        principalTable: "Products",
-                        principalColumn: "Id");
+                        principalTable: "Productos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -309,11 +315,6 @@ namespace Infraestructure.Migrations
                 column: "IdOrden");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Productos_Ordenes_IdProducto",
-                table: "Productos_Ordenes",
-                column: "IdProducto");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ProductsProviders_IdProductosNavigationId",
                 table: "ProductsProviders",
                 column: "IdProductosNavigationId");
@@ -324,9 +325,9 @@ namespace Infraestructure.Migrations
                 column: "IdProveedoresNavigationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reviews_ProductId",
+                name: "IX_Reviews_UsuarioId",
                 table: "Reviews",
-                column: "ProductId");
+                column: "UsuarioId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Usuarios_IdDireccion",
@@ -365,7 +366,7 @@ namespace Infraestructure.Migrations
                 name: "Providers");
 
             migrationBuilder.DropTable(
-                name: "Products");
+                name: "Productos");
 
             migrationBuilder.DropTable(
                 name: "Envios");

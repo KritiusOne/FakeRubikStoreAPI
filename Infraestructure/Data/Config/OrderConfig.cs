@@ -10,7 +10,7 @@ namespace Infraestructure.Data.Config
         {
             entity.HasKey(x => x.Id);
             entity.ToTable("Ordenes");
-            entity.Property(e => e.Date).HasColumnType("datetime").HasColumnName("Fecha");
+            entity.Property(e => e.Date).HasColumnType("timestamp").HasColumnName("Fecha");
             entity.Property(e => e.FinalPrice).HasColumnName("PrecioFinal");
             entity.Property(e => e.IdDelivery).HasColumnName("IdEnvio");
             entity.Property(e => e.NumberCard).HasColumnName("numerotarjeta");
