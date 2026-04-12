@@ -1,5 +1,6 @@
 using Aplication.Enums;
 using Aplication.Interfaces;
+using Aplication.Options;
 using Aplication.Services;
 using Infraestructure.Data;
 using Infraestructure.Filters;
@@ -55,6 +56,8 @@ builder.Services.AddTransient<IDeliveryRepository, DeliveryRepository>();
 builder.Services.AddTransient<IDeliveryService, DeliveryService>();
 builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
 builder.Services.AddTransient<ICategoryService, CategoryService>();
+builder.Services.Configure<CloudinaryStorageOptions>(builder.Configuration.GetSection("FileStorage:Claudinary"));
+builder.Services.AddScoped<IFileStorageService, CloudinaryStorageService>();
 builder.Services.AddTransient<IBlobServices, BlobServices>();
 
 builder.Services.AddSingleton<IUriService>(provider =>

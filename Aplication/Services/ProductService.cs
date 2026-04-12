@@ -11,9 +11,11 @@ namespace Aplication.Services
     public class ProductService : IProductService
     {
         private readonly IUnitOfWork<Product> _unitOfWork;
-        public ProductService(IUnitOfWork<Product> unit)
+        private readonly IFileStorageService _fileStorageService;
+        public ProductService(IUnitOfWork<Product> unit, IFileStorageService fileStorageService)
         {
             this._unitOfWork = unit;
+            this._fileStorageService = fileStorageService;
         }
 
         public PagedList<Product> GetAllProducts(ProductQueryFilter filters)
@@ -39,23 +41,47 @@ namespace Aplication.Services
             return paginationProducts;
         }
 
-        public async Task AddProduct(Product product, Stream ThumbnailImg, Stream ProductImg, string key)
+        public async Task AddProduct(Product product, Stream ThumbnailImg, Stream ProductImg)
         {
             if(product == null)
             {
                 throw new BaseException("Bad request, Product is null");
             }
+            string? thumbnailName = null;
+            string? productImageName = null;
             try
             {
-                var blobService = new BlobServices();
-                string thumbnailName = await blobService.UploadBlobAsync(ThumbnailImg, AzureBlobTypes.Products, key);
+                thumbnailName = await _fileStorageService.UploadFileAsync(ThumbnailImg, StorageContainers.Products, Guid.NewGuid().ToString());
                 product.Thumbnail = thumbnailName;
-                product.Image = await blobService.UploadBlobAsync(ProductImg, AzureBlobTypes.Products, key);
+                productImageName = await _fileStorageService.UploadFileAsync(ProductImg, StorageContainers.Products, Guid.NewGuid().ToString());
+                product.Image = productImageName;
                 await _unitOfWork.ProductRepo.Add(product);
                 await _unitOfWork.SaveChangesAsync();
             }
             catch(Exception ex)
             {
+                if (!string.IsNullOrWhiteSpace(thumbnailName))
+                {
+                    try
+                    {
+                        await _fileStorageService.DeleteFileAsync(StorageContainers.Products, thumbnailName);
+                    }
+                    catch
+                    {
+                    }
+                }
+
+                if (!string.IsNullOrWhiteSpace(productImageName))
+                {
+                    try
+                    {
+                        await _fileStorageService.DeleteFileAsync(StorageContainers.Products, productImageName);
+                    }
+                    catch
+                    {
+                    }
+                }
+
                 throw new Exception("Hubo un problema al momento de crear el registro", ex);
             }
         }
@@ -64,8 +90,13 @@ namespace Aplication.Services
             return _unitOfWork.ProductRepo.GetByIdWithTables(id);
         }
 
-        public async Task UpdateProduct(Stream thumbnailImg, Stream productImg, Product ProductInfo, string blobKey, int id)
+        public async Task UpdateProduct(Stream thumbnailImg, Stream productImg, Product ProductInfo, int id)
         {
+            string? previousThumbnail = null;
+            string? previousImage = null;
+            string? newThumbnail = null;
+            string? newImage = null;
+
             try
             {
                 await _unitOfWork.BeginTransactionAsync();
@@ -79,19 +110,18 @@ namespace Aplication.Services
                 actualProductInfo.Price = ProductInfo.Price;
                 actualProductInfo.Description = ProductInfo.Description;
                 actualProductInfo.Stock = ProductInfo.Stock;
+                previousThumbnail = actualProductInfo.Thumbnail;
+                previousImage = actualProductInfo.Image;
 
-                var blobServices = new BlobServices();
-                var urlThumbnail = await blobServices.UploadBlobAsync(thumbnailImg, Enums.AzureBlobTypes.Products, blobKey);
-                if(urlThumbnail != null)
+                newThumbnail = await _fileStorageService.UploadFileAsync(thumbnailImg, StorageContainers.Products, Guid.NewGuid().ToString());
+                if(!string.IsNullOrWhiteSpace(newThumbnail))
                 {
-                    await blobServices.DeleteAsync(AzureBlobTypes.Products,actualProductInfo.Thumbnail, blobKey);
-                    actualProductInfo.Thumbnail = urlThumbnail;
+                    actualProductInfo.Thumbnail = newThumbnail;
                 }
-                var urlProductImg = await blobServices.UploadBlobAsync(productImg, Enums.AzureBlobTypes.Products, blobKey);
-                if(urlProductImg != null)
+                newImage = await _fileStorageService.UploadFileAsync(productImg, StorageContainers.Products, Guid.NewGuid().ToString());
+                if(!string.IsNullOrWhiteSpace(newImage))
                 {
-                    await blobServices.DeleteAsync(AzureBlobTypes.Products, actualProductInfo.Image, blobKey);
-                    actualProductInfo.Image = urlProductImg;
+                    actualProductInfo.Image = newImage;
                 }
 
                 foreach(var tag in ProductInfo.ProductCategories)
@@ -106,10 +136,55 @@ namespace Aplication.Services
                 _unitOfWork.ProductRepo.Update(id, actualProductInfo);
                 await _unitOfWork.SaveChangesAsync();
                 _unitOfWork.CommitTransaction();
+
+                if (!string.IsNullOrWhiteSpace(previousThumbnail) && previousThumbnail != newThumbnail)
+                {
+                    try
+                    {
+                        await _fileStorageService.DeleteFileAsync(StorageContainers.Products, previousThumbnail);
+                    }
+                    catch
+                    {
+                    }
+                }
+
+                if (!string.IsNullOrWhiteSpace(previousImage) && previousImage != newImage)
+                {
+                    try
+                    {
+                        await _fileStorageService.DeleteFileAsync(StorageContainers.Products, previousImage);
+                    }
+                    catch
+                    {
+                    }
+                }
             }
             catch (Exception ex)
             {
                 _unitOfWork.RollbackTransaction();
+
+                if (!string.IsNullOrWhiteSpace(newThumbnail))
+                {
+                    try
+                    {
+                        await _fileStorageService.DeleteFileAsync(StorageContainers.Products, newThumbnail);
+                    }
+                    catch
+                    {
+                    }
+                }
+
+                if (!string.IsNullOrWhiteSpace(newImage))
+                {
+                    try
+                    {
+                        await _fileStorageService.DeleteFileAsync(StorageContainers.Products, newImage);
+                    }
+                    catch
+                    {
+                    }
+                }
+
                 throw new Exception("Problemas al realizar la actualización", ex);
             }
         }
