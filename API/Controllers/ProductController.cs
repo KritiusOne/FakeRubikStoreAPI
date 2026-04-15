@@ -19,13 +19,11 @@ namespace API.Controllers
         private readonly IMapper _mapper;
         private readonly IProductService _productService;
         private readonly IUriService _uriService;
-        private readonly IConfiguration _config;
-        public ProductController(IMapper map, IProductService productService, IUriService uriService, IConfiguration config)
+        public ProductController(IMapper map, IProductService productService, IUriService uriService)
         {
             this._productService = productService;
             _mapper = map;
             this._uriService = uriService;
-            _config = config;
         }
         [HttpGet]
         public IActionResult Get([FromQuery] ProductQueryFilter filters)
@@ -124,7 +122,7 @@ namespace API.Controllers
             {
                 using(Stream productImg = AllInfoProduct.ProductImage.OpenReadStream())
                 {
-                    await _productService.AddProduct(product, thumbnail, productImg, _config["BlobStorage:ConnectionString"]);
+                    await _productService.AddProduct(product, thumbnail, productImg);
                 }
             }
             return Ok();
@@ -133,7 +131,6 @@ namespace API.Controllers
         [Authorize(Policy = "OnlyAdmins")]
         public async Task<IActionResult> UpdateProduct([FromForm] ProductInfoUpdateDTO InfoProduct)
         {
-            string key = _config["BlobStorage:ConnectionString"];
             using(Stream thumbnailImg = InfoProduct.ThumbnailImage.OpenReadStream())
             {
                 using(Stream productImg = InfoProduct.ProductImage.OpenReadStream())
@@ -141,7 +138,7 @@ namespace API.Controllers
                     thumbnailImg.Position = 0;
                     productImg.Position = 0;
                     var product = _mapper.Map<Product>(InfoProduct.InfoProduct);
-                    await _productService.UpdateProduct(thumbnailImg, productImg, product, key, product.Id);
+                    await _productService.UpdateProduct(thumbnailImg, productImg, product, product.Id);
                 }
             }
             return Ok("El registro a sido actualizado con exito");
